@@ -125,12 +125,12 @@ deploy to staging:
     ADMIN_URL: "https://staging.plusintegrity.com"
     REVOCATION: "https://revocation.svc-staging.plusintegrity.com"
     FILESTORE: "gcs"
-    GCS_BUCKET: "integrity-realm-staging"
+    GCS_BUCKET: "integrity-realm-ng-staging"
     GCS_LOCATION: "EU"
     GCS_PROJECT: "integrity-staging"
     PUBSUB: "google"
     PUBSUB_PROJECT_ID: "integrity-staging"
-    REALM_TOPIC: "staging-realms"
+    REALM_TOPIC: "staging-realms-ng"
 
 # deploy to production:
 #   image: gcr.io/brickchain-docker/gitlab-builder-deploy
