@@ -26,14 +26,12 @@ build:
   image: gcr.io/brickchain-docker/gitlab-builder-go:1.10
   stage: build
   script:
-    - git describe --tags --long > realm-version.txt
     - go generate pkg/version/version.go
     - go generate cmd/realm/main.go
     - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-amd64
     # - GOOS=linux GOARCH=386 CGO_ENABLED=1 go build -ldflags '-extldflags "-static"' -o realm-linux-386
   artifacts:
     paths:
-    - realm-version.txt
     - realm-linux-*
 
 # build-darwin:
