@@ -1,0 +1,196 @@
+image: gcr.io/brickchain-docker/gitlab-builder-base:alpine
+
+variables:
+  REPO: gcr.io/brickchain-infra/realm-ng
+ 
+before_script:
+  - mkdir -p /go/src/gitlab.brickchain.com/brickchain
+  - ln -s $CI_PROJECT_DIR /go/src/gitlab.brickchain.com/brickchain/$CI_PROJECT_NAME
+  - cd /go/src/gitlab.brickchain.com/brickchain/$CI_PROJECT_NAME
+  - export IMAGE=${REPO}:${CI_BUILD_REF}
+  
+stages:
+  - test
+  - build
+  - docker
+  - deploy
+
+test:
+  image: gcr.io/brickchain-docker/gitlab-builder-go:1.8
+  stage: test
+  script:
+    - go generate cmd/realm/main.go
+    - go test -v -cover $(go list ./... | grep -v /vendor/)
+
+build:
+  image: gcr.io/brickchain-docker/gitlab-builder-go:1.8
+  stage: build
+  script:
+    - git describe --tags --long > realm-version.txt
+    - go generate pkg/version/version.go
+    - go generate cmd/realm/main.go
+    - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-amd64
+    # - GOOS=linux GOARCH=386 CGO_ENABLED=1 go build -ldflags '-extldflags "-static"' -o realm-linux-386
+  artifacts:
+    paths:
+    - realm-version.txt
+    - realm-linux-*
+
+# build-darwin:
+#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-darwin:1.8
+#   stage: build
+#   script:
+#     - go generate constant/version.go
+#     - go generate
+#     - CC=o64-clang CXX=o64-clang++ GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -o realm-darwin-amd64
+#     - CC=o32-clang CXX=o32-clang++ GOOS=darwin GOARCH=386 CGO_ENABLED=1 go build -o realm-darwin-386
+#   artifacts:
+#     paths:
+#     - realm-darwin-*
+
+# build-arm:
+#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-arm:1.8
+#   stage: build
+#   script:
+#     - go generate constant/version.go
+#     - go generate
+#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=5 CGO_ENABLED=1 CGO_CFLAGS="-march=armv5 -fPIC" CGO_CXXFLAGS="-march=armv5 -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv5
+#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=6 CGO_ENABLED=1 CGO_CFLAGS="-march=armv6 -fPIC" CGO_CXXFLAGS="-march=armv6 -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv6
+#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CGO_CFLAGS="-march=armv7-a -fPIC" CGO_CXXFLAGS="-march=armv7-a -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv7
+#     - CC=aarch64-linux-gnu-gcc-5 CXX=aarch64-linux-gnu-g++-5 GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-arm64
+#   artifacts:
+#     paths:
+#     - realm-linux-arm*
+
+docker:
+  stage: docker
+  script:
+    - test -e /var/run/docker.sock || export DOCKER_HOST=tcp://localhost:2375
+    - vaultenv download secret/env/gitlab-ci/gcr-pusher.json ~/gcr-pusher.json
+    - docker login -u _json_key -p "$(cat ~/gcr-pusher.json)" https://gcr.io
+    - docker build -t $IMAGE --build-arg PORT=6593 .
+    - docker push $IMAGE
+    - docker tag $IMAGE $REPO:latest
+    - docker push $REPO:latest
+  only:
+    - master
+  services:
+    - gcr.io/brickchain-docker/gitlab-builder-docker
+
+# upload to aws:
+#   image: gcr.io/brickchain-docker/gitlab-builder-deploy
+#   stage: deploy
+#   only:
+#     - master
+#   script:
+#     - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
+#     - aws s3 cp realm-version.txt s3://brickchain-artifacts/
+#     - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/
+#     - aws s3 cp realm-darwin-386 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-386 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-armv5 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-armv6 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/
+#     - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/
+
+deploy to staging:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: deploy
+  only:
+    - master
+  script:
+    - ./tools/deploy_k8s.sh
+  artifacts:
+      paths:
+      - pod.yml
+      - svc.yml
+      - ingress.yml
+      when: always
+  variables:
+    TAG: "$CI_BUILD_REF"
+    GCE_PROJECT: "integrity-staging"
+    REGION: "europe-west1"
+    ZONE: "europe-west1-c"
+    CLUSTER: "staging-1"
+    NAMESPACE: "realm-ng"
+    ENV_NAME: "staging"
+    REPLICAS: 3
+    URL: "realm-ng.svc-staging.plusintegrity.com"
+    INGRESS_NAME: "realm-ng-svc-staging-plusintegrity-com"
+    SQL_NAME: "postgres-staging"
+    REDIS: "redis:6379"
+    ALLOWED_ENDPOINTS: "https://realm-ng.svc-staging.plusintegrity.com https://staging.plusintegrity.com"
+    DATADOG: "dogstatsd.default:8125"
+    ADMIN_URL: "https://staging.plusintegrity.com"
+    REVOCATION: "https://revocation.svc-staging.plusintegrity.com"
+    FILESTORE: "gcs"
+    GCS_BUCKET: "integrity-realm-staging"
+    GCS_LOCATION: "EU"
+    GCS_PROJECT: "integrity-staging"
+    PUBSUB: "google"
+    PUBSUB_PROJECT_ID: "integrity-staging"
+    REALM_TOPIC: "staging-realms"
+
+# deploy to production:
+#   image: gcr.io/brickchain-docker/gitlab-builder-deploy
+#   stage: deploy
+#   when: manual
+#   only:
+#     - master
+#   script:
+#     - mkdir ~/.kube; vaultenv download secret/env/gitlab-ci/kubeauth-${GCE_PROJECT}.json ~/.kube/gke.json
+#     - gcloud auth activate-service-account --key-file ~/.kube/gke.json
+#     - gcloud config set container/use_application_default_credentials true
+#     - gcloud config set project ${GCE_PROJECT}
+#     - export GOOGLE_APPLICATION_CREDENTIALS=~/.kube/gke.json
+#     - gcloud container clusters get-credentials --zone ${ZONE} ${CLUSTER}
+
+#     - kubectl create ns ${NAMESPACE} || true
+#     - kubectl -n ${NAMESPACE} get secret gcr-pull || ./tools/gcr_secret.sh
+
+#     - export SQL_CONNECT="${GCE_PROJECT}:${REGION}:${SQL_NAME}=tcp:5432"
+#     - cloud_sql_proxy -dir ./ -projects ${GCE_PROJECT} -instances=${SQL_CONNECT} & sleep 5
+#     - export PGPASSWORD=`vaultenv password secret/env/db/${SQL_NAME}/root`
+#     - export SQL_PASSWORD=`vaultenv password secret/env/db/${SQL_NAME}/realm`
+#     - psql --user postgres --host 127.0.0.1 -c "CREATE DATABASE realm;" || true
+#     - psql --user postgres --host 127.0.0.1 -c "CREATE USER realm WITH PASSWORD '${SQL_PASSWORD}';" || true
+#     - psql --user postgres --host 127.0.0.1 -c "GRANT ALL PRIVILEGES ON DATABASE realm TO realm;"
+
+#     - vaultenv download secret/env/gitlab-ci/kubeauth-${GCE_PROJECT}.json gce.json
+#     - kubectl -n ${NAMESPACE} get secret gce || kubectl -n ${NAMESPACE} create secret generic gce --from-file=gce.json
+
+#     - export KEK=`vaultenv password secret/env/${CLUSTER}/realm/kek`
+#     - kubectl -n ${NAMESPACE} get secret realm-kek || kubectl -n ${NAMESPACE} create secret generic realm-kek --from-literal=KEK=${KEK}
+
+#     - dotenv render -t k8s/pod.yml -o pod.yml
+#     - kubectl -n ${NAMESPACE} apply -f pod.yml
+#     - dotenv render -t k8s/svc.yml -o svc.yml
+#     - kubectl -n ${NAMESPACE} apply -f svc.yml
+#     - dotenv render -t k8s/ingress.yml -o ingress.yml
+#     - kubectl -n ${NAMESPACE} create -f ingress.yml || echo "Ingress already exists"
+#     - pkill cloud_sql_proxy || true
+#   artifacts:
+#       paths:
+#       - pod.yml
+#       - svc.yml
+#       - ingress.yml
+#       when: always
+#   variables:
+#     TAG: "$CI_BUILD_REF"
+#     GCE_PROJECT: "integrity-prod"
+#     REGION: "europe-west1"
+#     ZONE: "europe-west1-c"
+#     CLUSTER: "prod-1"
+#     NAMESPACE: "realm"
+#     REPLICAS: 3
+#     URL: "realm.plusintegrity.com"
+#     INGRESS_NAME: "realm-plusintegrity-com"
+#     SQL_NAME: "postgres-prod-1"
+#     STORAGE_SERVICE: "http://storageservice.storage:6500"
+#     CRYPTOPROVIDER: "gorm"
+#     REDIS: "redis.realm:6379"
+#     ALLOWED_ENDPOINTS: "https://realm.plusintegrity.com https://admin.plusintegrity.com https://plusintegrity.com"
+#     DATADOG: "dogstatsd.default:8125"
+#     ADMIN_URL: "https://admin.plusintegrity.com"
+#     REVOCATION: "https://revocation.plusintegrity.com"

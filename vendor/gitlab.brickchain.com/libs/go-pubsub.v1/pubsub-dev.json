@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "brickchain-infra",
+  "private_key_id": "4ca08ae68235e8cc7898ff85f63b376482894787",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDDsWKBJ9RRfA0F\nCLWwvpE4TdodL+9kL+cz37boD7EkuzHsi2k2v2J39BhucfWiS01PGDILVN8ClHc2\n9maWwCzTyXvIhmc+pDWmZ6zijadAwJeeXztuzVqTC87XPwVN6A0nL6YawgmJ9AHN\nXyMJNDdyxdm1M1wsd57bf4YsRkxxc4p0Ke9ZHGDueB8LRkuFjxNJuHxpq+AiFY7l\n8y+luU1dOy+uuC/dDNQU7uqgCaXqPdOkVDGRi1XNEyBry/frOwAq/OI9C8zkHsF/\nDIoeItTMA2xaSfcG8Y7aM7KoID3xwppJbUlLFuXoeO1HS/EejN4w9IAdSSAmtoUh\nqAp4KIpDAgMBAAECggEBAJjrKFpc0WDLWzEv2Sq//6LL00EzkBHuDPFQRBGbEYXu\ncdiyKAmMDFpH+D919chYp5TDB3grXgkaEv50FT5/9YeZzoyn2k3s66+ZHFP89VF4\nLgKn0D2JYtm9RGiW6oIybvTMGzSVo/aVIkNlsG8kyp95U+Jwu/pTj2Neh25ZkKql\njBtpR/BeRrFyQwUxqyni3JGcnMZOCP3KK13J6HcweM6cEgVY5pCOp4/AWy5ckEau\nXgyLFZaPhJLKZXD+0Brqdsp44Y5lwEhsVS2InEvFBWt7tseSo5E4g+RLaH+GRxp1\nlPFrLuRrmlAA+d3gMKmq2sl8JY9riRvYVXTh5y44AqECgYEA8Zil6yGBi9Hy8sWV\nleqAXE2XeL2A11isLuVWLJxqqjCReYlghr2Oc3v4VnGt8mJeCHdxN9d0FbVWYEVx\nisqpuOhp5ElPpwfmi/oEjglrIV+tgT+z5HmXR2FsP5TbAGUgGGypfp9BocQQ+2Aq\nWS5ectNzz94MLymQMLroGAVPnJUCgYEAz1wje3sjTh/aymC9kIlfGooHoNxxV2Oj\nwWt2P+qmUR5IK9TJZPjBs3IxVJUYbILctfIdXwPT+HAfKpaBc533GyAvE0VMnuGJ\nBalajmJ+Jf5qbBjhKL9mh99mB0QQrfq0oEKezH4mu8GSoCXThOS02Hpce1JT/knx\ny6W33l9qfXcCgYA+B/6Z56l2d/qUIO0uZ957VKTOqIF7SVY0WEgO/j5Y4k2H0iEJ\nl4QK3Mq/j0KlWGJidCCKwPQaWswJverQQwbe5jXCGpyr+1hTmmcu/PYXxJQs+mk7\nAYk5F6eOj67HZC+gdc3zJ/rXCRt/H4rgCQrRGr/CoHWqalaOXH8ZI8v0HQKBgQCe\noyTaIRifeitOTLh5zT6e9R5k6IEllCsBnI740zGuOXaJYd85ij3WZPRseywWR/9G\nixYBTNJr7ItLb51VsHINpI+fNJMrseu8ExYefCd6NauBS39mRxfPtw89W8tO7tAl\nExKd650CY1MjhgzOTJI2U1ZRWmi70CJV5FBIpcK4fQKBgG0L8iOOqApWeJJmkULK\nCGd4R11FkTWylCi4+8yfn+Jdb6Ax+zXC4dyTRTrBkN9n6yG0/kpi0PElwJRj8fH+\njkteSRt3yBOvlvHx9BNcR6jtzgozziF23TVVqLKkoYKANe155HCyLwo00TL/rt2m\nPZHJXi4iFkieJl4ZgyIP7SRs\n-----END PRIVATE KEY-----\n",
+  "client_email": "pubsub-dev@brickchain-infra.iam.gserviceaccount.com",
+  "client_id": "102784872196280427904",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pubsub-dev%40brickchain-infra.iam.gserviceaccount.com"
+}

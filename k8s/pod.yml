@@ -1,0 +1,113 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    monitoring: "yes"
+    name: {{ .SERVICE }}
+  name: {{ .SERVICE }}
+spec:
+  replicas: {{ .REPLICAS }}
+  template:
+    metadata:
+      labels:
+        monitoring: "yes"
+        name: {{ .SERVICE }}
+      name: {{ .SERVICE }}
+    spec:
+      containers:
+        - name: {{ .SERVICE }}
+          image: {{ .IMAGE }}
+          env:
+            - name: "LOG_FORMATTER"
+              value: "json"
+            - name: "LOG_LEVEL"
+              value: "debug"
+            - name: "REDIS"
+              value: "{{ .REDIS }}"
+            - name: "BASE"
+              value: "https://{{ .URL }}"
+            - name: "KEK"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .SERVICE }}-kek"
+                  key: KEK
+            - name: "GORM_DIALECT"
+              value: "postgres"
+            - name: "GORM_OPTIONS"
+              value: "host=127.0.0.1 user={{ .SERVICE }} password={{ .SQL_PASSWORD }} dbname={{ .SERVICE }} sslmode=disable port=5432"
+            - name: "STATS"
+              value: "datadog"
+            - name: "DOGSTATSD"
+              value: "{{ .DATADOG }}"
+            - name: "FILESTORE"
+              value: "gcs"
+            - name: "GCS_BUCKET"
+              value: "{{ .GCS_BUCKET }}"
+            - name: "GCS_LOCATION"
+              value: "{{ .GCS_LOCATION }}"
+            - name: "GCS_PROJECT"
+              value: "{{ .GCE_PROJECT }}"
+            - name: "GCS_SECRET"
+              value: "/secrets/gce/gce.json"
+            - name: "PUBSUB"
+              value: "google"
+            - name: "CACHE"
+              value: "redis"
+            - name: "REALM_TOPIC"
+              value: "{{ .REALM_TOPIC }}"
+            - name: "PUBSUB_PROJECT_ID"
+              value: "{{ .GCE_PROJECT }}"
+            - name: "PUBSUB_CREDENTIALS"
+              value: "/secrets/gce/gce.json"
+            - name: "ALLOWED_ENDPOINTS"
+              value: "{{ .ALLOWED_ENDPOINTS }}"
+            - name: "ADMIN_URL"
+              value: "{{ .ADMIN_URL }}"
+            - name: "REVOCATION"
+              value: "{{ .REVOCATION }}"
+            - name: "EMAIL_PROVIDER"
+              value: "mailgun"
+            - name: "MAILGUN_CONFIG"
+              value: "/secrets/mailgun/dev.yml"
+          ports:
+            - containerPort: 6593
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 6593
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: gce
+              mountPath: /secrets/gce
+              readOnly: true
+          volumeMounts:
+            - name: mailgun
+              mountPath: /secrets/mailgun
+              readOnly: true
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.09
+          name: cloudsql-proxy
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances={{ .SQL_CONNECT }}",
+                    "-credential_file=/secrets/gce/gce.json"]
+          volumeMounts:
+            - name: gce
+              mountPath: /secrets/gce
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+
+      volumes:
+        - name: gce
+          secret:
+            secretName: gce
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
+        - name: mailgun
+          secret:
+            secretName: mailgun

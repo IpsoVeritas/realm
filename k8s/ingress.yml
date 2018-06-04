@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ .INGRESS_NAME }}"
+  labels:
+    stable.k8s.psg.io/kcm.class: "default"
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    stable.k8s.psg.io/kcm.enabled: "true"
+    stable.k8s.psg.io/kcm.provider: "googlecloud"
+    stable.k8s.psg.io/kcm.email: "certs@brickchain.com"
+    k8s.brickchain.com/dns: "true"
+spec:
+  tls:
+  - hosts:
+    - "{{ .URL }}"
+    secretName: "tls-{{ .URL }}"
+  backend:
+    serviceName: realm-ng
+    servicePort: 6593
+  rules:
+  - http:
+      paths:
+      - path: /realm/v2/*
+        backend:
+            serviceName: realm-ng
+            servicePort: 6593
+      - path: /realm/v2
+        backend:
+            serviceName: realm-ng
+            servicePort: 6593
+      - path: /.well-known/realm/*
+        backend:
+            serviceName: realm-ng
+            servicePort: 6593

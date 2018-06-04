@@ -1,0 +1,130 @@
+<!doctype HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>plusintegrity</title>
+  <style>
+
+ body {
+     font-family: SourceSansPro, Robota, Helvetica, sans-serif;
+     font-weight: normal;
+     font-size: 14px;
+     color: #202020; 
+ }
+
+ table {
+     width: 553px;
+     margin: auto;
+ }
+
+ table td {
+     width: 513px;
+     padding: 20px 80px;
+ }
+
+ h1 {
+     font-weight: normal;
+     font-size: 20px;
+ }
+
+ h2,h3 {
+     font-weight: normal;
+     font-size: 18px;
+ }
+
+ .logo{
+     padding: 0px;
+ }
+
+ .heading{
+     background-color: #20afe2;
+     color: white;
+ }
+
+ .bluetext {
+     color: #004b97;
+ }
+
+ .orangetext {
+     color: #f76a0a;
+ }
+
+ .button {
+     display: block;
+     position: inline;
+     border-radius: 30px;
+     padding-top: 10px;
+     padding-bottom: 10px;
+     padding-left: 20px;
+     padding-right: 20px;
+     width: 200px;
+     background-color: white;
+     color:  #20afe2;
+  }
+
+  a {
+     text-decoration: none;
+  }
+
+ .text {
+      text-align: center;
+      color: #808080;
+ }
+
+ .footer {
+     text-align: center;
+     background-color: #f0f0f0;
+ }
+
+ .footer > a {
+     color: #505050;
+     text-decoration: none;
+ }
+
+</style>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body>
+
+<table width="514" border="0">
+    <tr><td class="logo">
+        <center><img src="cid:mail-logo.png" alt="+integrity."/></center>
+    </td></tr>
+    <tr><td class="heading" background-color="#20afe2">
+        <center>
+            <h1>Hello, this is your invite to
+            <div class="realm-name">{{ .realm }}</h1>
+            <a href="{{ .link }}"><div class="button">Access the services</div></a>
+        </center>
+    </td></tr>
+    <tr><td class="text">
+        <p>
+            You need the +Integrity App on your phone to identify yourself and
+            access {{ .realm }} services. If you don't have it yet, this invite
+            link will redirect you to the download page. Once installed,
+            just launch the application and click the link again. </p>
+    </td></tr>
+    <tr><td class="footer"  background-color="#f0f0f0">
+        <h3 class="bluetext">The +Integrity App</h3>
+        <p>
+            The +Integrity App is your secure passport.
+            It belongs to you and is independent from the service place you access.
+            +Integrity helps people create, publish and discover services across
+            professional networks and personal communities. </p>
+    </td></tr>
+    <tr><td class="text">
+        <h3 class="orangetext">About us</h3>
+        <p>+Integrity is designed by Brickchain Ltd, with a passionate team
+            working between Stockholm, Paris and London.</p>
+    </td></tr>
+    <tr><td class="footer" background-color="#f0f0f0">
+        <a href="https://plusintegrity.com/">+Integrity.com</a> &nbsp;
+        <a href="https://plusintegrity.com/faq/">FAQ</a>  &nbsp;
+        <a href="https://plusintegrity.com/webterms/">Terms</a>  &nbsp;
+        <a href="mailto:support@plusintegrity.com">support@plusintegrity.com</a>
+    </td></tr>
+</table>
+
+</body>
+</html>
