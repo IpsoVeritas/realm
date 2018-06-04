@@ -3,7 +3,7 @@
 # fail if we encounter an error
 set -e
 
-export SERVICE="realm-ng"
+export SERVICE="realmng"
 
 # make sure we always kill the cloud sql proxy on script exit
 function finish {
