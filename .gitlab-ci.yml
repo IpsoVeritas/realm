@@ -16,14 +16,14 @@ stages:
   - deploy
 
 test:
-  image: gcr.io/brickchain-docker/gitlab-builder-go:1.8
+  image: gcr.io/brickchain-docker/gitlab-builder-go:1.10
   stage: test
   script:
     - go generate cmd/realm/main.go
     - go test -v -cover $(go list ./... | grep -v /vendor/)
 
 build:
-  image: gcr.io/brickchain-docker/gitlab-builder-go:1.8
+  image: gcr.io/brickchain-docker/gitlab-builder-go:1.10
   stage: build
   script:
     - git describe --tags --long > realm-version.txt
@@ -37,7 +37,7 @@ build:
     - realm-linux-*
 
 # build-darwin:
-#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-darwin:1.8
+#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-darwin:1.10
 #   stage: build
 #   script:
 #     - go generate constant/version.go
@@ -49,7 +49,7 @@ build:
 #     - realm-darwin-*
 
 # build-arm:
-#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-arm:1.8
+#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-arm:1.10
 #   stage: build
 #   script:
 #     - go generate constant/version.go
