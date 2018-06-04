@@ -66,7 +66,7 @@ docker:
     - test -e /var/run/docker.sock || export DOCKER_HOST=tcp://localhost:2375
     - vaultenv download secret/env/gitlab-ci/gcr-pusher.json ~/gcr-pusher.json
     - docker login -u _json_key -p "$(cat ~/gcr-pusher.json)" https://gcr.io
-    - docker build -t $IMAGE --build-arg PORT=6593 .
+    - docker build -t $IMAGE -f cmd/realm/Dockerfile --build-arg PORT=6593 .
     - docker push $IMAGE
     - docker tag $IMAGE $REPO:latest
     - docker push $REPO:latest
