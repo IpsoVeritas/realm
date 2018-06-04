@@ -3,6 +3,7 @@ package gorm
 import (
 	"testing"
 
+	"github.com/Brickchain/go-document.v2"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 )
@@ -19,7 +20,12 @@ func TestControllerService_Get(t *testing.T) {
 		{
 			name: "Get",
 			prepare: func(t *testing.T, tt *test) {
-				r := realm.Controller{ID: "abc", Realm: "abc"}
+				r := realm.Controller{
+					Base: document.Base{
+						ID:    "abc",
+						Realm: "abc",
+					},
+				}
 				if err := tt.svc.Set("abc", &r); err != nil {
 					t.Fatal(err)
 				}
@@ -30,7 +36,12 @@ func TestControllerService_Get(t *testing.T) {
 		{
 			name: "Get_Controller_not_exist",
 			prepare: func(t *testing.T, tt *test) {
-				r := realm.Controller{ID: "abc", Realm: "abc"}
+				r := realm.Controller{
+					Base: document.Base{
+						ID:    "abc",
+						Realm: "abc",
+					},
+				}
 				if err := tt.svc.Set("abc", &r); err != nil {
 					t.Fatal(err)
 				}
