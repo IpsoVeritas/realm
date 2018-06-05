@@ -81,7 +81,6 @@ spec:
             - name: gce
               mountPath: /secrets/gce
               readOnly: true
-          volumeMounts:
             - name: mailgun
               mountPath: /secrets/mailgun
               readOnly: true
