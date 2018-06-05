@@ -18,6 +18,7 @@ import (
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
