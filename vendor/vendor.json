@@ -267,6 +267,12 @@
 			"revisionTime": "2017-05-04T14:08:37Z"
 		},
 		{
+			"checksumSHA1": "QmQW8snORAputB7/1jFXpsOZa8A=",
+			"path": "github.com/jinzhu/gorm/dialects/postgres",
+			"revision": "9acaa33324bbcc78239a1c913d4f1292c12177b9",
+			"revisionTime": "2017-05-04T14:08:37Z"
+		},
+		{
 			"checksumSHA1": "4VZ1gLZHMumRjV3fclS1aX8S1aQ=",
 			"path": "github.com/jinzhu/gorm/dialects/sqlite",
 			"revision": "9acaa33324bbcc78239a1c913d4f1292c12177b9",
@@ -289,6 +295,24 @@
 			"path": "github.com/julienschmidt/httprouter",
 			"revision": "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e",
 			"revisionTime": "2017-04-30T22:20:11Z"
+		},
+		{
+			"checksumSHA1": "Wh2YCiWY/VIAEEQGLS7sMB9isXk=",
+			"path": "github.com/lib/pq",
+			"revision": "8837942c3e09574accbc5f150e2c5e057189cace",
+			"revisionTime": "2017-06-03T22:54:54Z"
+		},
+		{
+			"checksumSHA1": "jaCQF1par6Jl8g+V2Cgp0n/0wSc=",
+			"path": "github.com/lib/pq/hstore",
+			"revision": "8837942c3e09574accbc5f150e2c5e057189cace",
+			"revisionTime": "2017-06-03T22:54:54Z"
+		},
+		{
+			"checksumSHA1": "Gk3jTNQ5uGDUE0WMJFWcYz9PMps=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "8837942c3e09574accbc5f150e2c5e057189cace",
+			"revisionTime": "2017-06-03T22:54:54Z"
 		},
 		{
 			"checksumSHA1": "UvboqgDDSAbGORdtr5tBpkwYR0A=",
