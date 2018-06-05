@@ -273,9 +273,15 @@ func loadHandler() http.Handler {
 		b, _ := bootContext.Settings().Get("bootstrapped")
 		if b != "true" {
 			pw, err := bootContext.Settings().Get("password")
-			if err == nil {
-				logger.Infof("Bootstrap password: %s", pw)
+			if err != nil {
+				pw, err = crypto.GenerateRandomString(10)
+				if err != nil {
+					logger.Fatal(err)
+				}
+				bootContext.Settings().Set("password", pw)
 			}
+
+			logger.Infof("Bootstrap password: %s", pw)
 		}
 	}
 
