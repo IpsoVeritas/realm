@@ -7,7 +7,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    name: realm-ng
+    name: realmng
   ports:
     - port: 6593
       name: api

@@ -270,7 +270,12 @@ func loadHandler() http.Handler {
 	} else {
 		bootContext = contextProvider.Get(bootRealmName)
 
-		b, _ := bootContext.Settings().Get("bootstrapped")
+		b, err := bootContext.Settings().Get("bootstrapped")
+		if err != nil {
+			if err := bootContext.Settings().Set("bootstrapped", "false"); err != nil {
+				logger.Fatal(err)
+			}
+		}
 		if b != "true" {
 			pw, err := bootContext.Settings().Get("password")
 			if err != nil {
