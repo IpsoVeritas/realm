@@ -154,10 +154,11 @@ func (r *RealmService) HasAdminMandateForRealm(mandates []httphandler.Authentica
 
 func (r *RealmService) Actions() *ActionService {
 	return &ActionService{
-		base:    r.base,
-		p:       r.p.actions,
-		realmID: r.realmID,
-		realm:   r,
+		base:             r.base,
+		bootstrapRealmID: r.p.bootstrapRealmID,
+		p:                r.p.actions,
+		realmID:          r.realmID,
+		realm:            r,
 	}
 }
 

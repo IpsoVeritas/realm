@@ -11,10 +11,11 @@ import (
 )
 
 type ActionService struct {
-	base    string
-	p       realm.ActionProvider
-	realmID string
-	realm   *RealmService
+	base             string
+	bootstrapRealmID string
+	p                realm.ActionProvider
+	realmID          string
+	realm            *RealmService
 }
 
 func (a *ActionService) List() ([]*realm.ControllerAction, error) {
@@ -69,6 +70,10 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 				}
 				loginAction.Params = map[string]string{
 					"backend": fmt.Sprintf("%s/realm/v2", a.base),
+				}
+
+				if a.realmID == a.bootstrapRealmID {
+					loginAction.Params["createRealms"] = "true"
 				}
 
 				descriptors = append(descriptors, &realm.ControllerAction{
