@@ -17,11 +17,11 @@ func NewBindataProvider() *BindataProvider {
 }
 
 func (b *BindataProvider) Read(name string) ([]byte, error) {
-	return Asset(name)
+	return Asset(fmt.Sprintf("../../../assets/%s", name))
 }
 
 func (b *BindataProvider) List(name string) ([]string, error) {
-	return AssetDir(name)
+	return AssetDir(fmt.Sprintf("../../../assets/%s", name))
 }
 
 func (b *BindataProvider) CopyToTempFile(name string) (string, error) {
