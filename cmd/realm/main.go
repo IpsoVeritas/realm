@@ -59,9 +59,9 @@ func main() {
 	viper.SetDefault("redis", "localhost:6379")
 	viper.SetDefault("filestore_dir", ".files")
 	viper.SetDefault("stats", "none")
-	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/master/")
+	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/v2/")
 	viper.SetDefault("proxy_domain", "r.integrity.app")
-	viper.SetDefault("proxy_endpoint", "https://larsdev.plusintegrity.com/push/register")
+	viper.SetDefault("proxy_endpoint", "https://proxy.svc-staging.plusintegrity.com")
 	viper.SetDefault("email_provider", "dummy")
 
 	logger.SetOutput(os.Stdout)
@@ -290,6 +290,16 @@ func loadHandler() http.Handler {
 		}
 	}
 
+	for _, roleName := range []string{"admin", "guest", "services"} {
+		fullName := fmt.Sprintf("%s@%s", roleName, bootRealmName)
+		if _, err := bootContext.Roles().ByName(fullName); err != nil {
+			logger.Infof("Creating role: %s", fullName)
+			if err := bootContext.Roles().Set(document.NewRole(fullName)); err != nil {
+				logger.Fatal("Failed to create role %s:", roleName, err)
+			}
+		}
+	}
+
 	base := viper.GetString("base")
 	if base == "" {
 		base = fmt.Sprintf("https://%s", bootRealmName)
@@ -383,26 +393,21 @@ func loadHandler() http.Handler {
 	handler := httphandler.LoadMiddlewares(r, version.Version)
 
 	if strings.HasSuffix(bootRealmName, viper.GetString("proxy_domain")) {
-		go func() {
-			for {
-				logger.Debug("Connecting to proxy..")
-				key, err := bootContext.Key()
-				if err != nil {
-					logger.Fatal(err)
-				}
+		key, err := bootContext.Key()
+		if err != nil {
+			logger.Fatal(err)
+		}
 
-				p, err := proxy.NewProxy(key, viper.GetString("proxy_endpoint"), viper.GetString("proxy_token"))
-				if err != nil {
-					logger.Error(err)
-				} else {
-					if err := p.Subscribe(handler); err != nil {
-						logger.Error(err)
-					}
-				}
-
-				time.Sleep(time.Second * 1)
+		p, err := proxy.NewProxy(viper.GetString("proxy_endpoint"))
+		if err != nil {
+			logger.Error(err)
+		} else {
+			if err := p.Register(key); err != nil {
+				logger.Error(err)
 			}
-		}()
+
+			p.SetHandler(handler)
+		}
 	}
 
 	return handler

@@ -26,6 +26,7 @@ func run(m *testing.M) int {
 	logger.SetLevel("debug")
 	viper.SetDefault("gorm_debug", "false")
 	viper.SetDefault("base", "http://test.local")
+	viper.SetDefault("proxy_domain", "r.integrity.app")
 
 	viper.SetDefault("filestore_dir", ".test-files")
 	defer os.RemoveAll(".test-files")
