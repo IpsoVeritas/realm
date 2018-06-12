@@ -495,6 +495,12 @@
 			"revisionTime": "2018-02-19T13:51:26Z"
 		},
 		{
+			"checksumSHA1": "8+JC+kIzY2i++EsiWqtmDyuQkjw=",
+			"path": "gitlab.brickchain.com/controllers/proxy/proxy",
+			"revision": "48ef8f783916dd1105b1740a2621c16abb4c43e6",
+			"revisionTime": "2018-06-12T12:21:38Z"
+		},
+		{
 			"checksumSHA1": "YLov2cEB3eLqrbOHLHO/Gqrc7ag=",
 			"path": "gitlab.brickchain.com/libs/go-cache.v1",
 			"revision": "fc4bc45b8190d2e96e2f0e00ae81d7c599b8bdce",
