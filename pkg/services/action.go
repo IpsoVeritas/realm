@@ -107,6 +107,10 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 			"proxy_endpoint": viper.GetString("proxy_endpoint"),
 		}
 
+		if a.realmID == a.bootstrapRealmID {
+			loginAction.Params["createRealms"] = "true"
+		}
+
 		descriptors = append(descriptors, &realm.ControllerAction{
 			ActionDescriptor: *loginAction,
 		})
