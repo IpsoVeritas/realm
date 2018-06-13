@@ -40,7 +40,6 @@ type Proxy struct {
 func NewProxy(endpoint string) (*Proxy, error) {
 	p := &Proxy{
 		endpoint:  endpoint,
-		regDone:   make(chan error),
 		writeLock: &sync.Mutex{},
 	}
 
@@ -107,6 +106,8 @@ func (p *Proxy) register() error {
 
 		time.Sleep(time.Millisecond * 10)
 	}
+
+	p.regDone = make(chan error)
 
 	mandateToken := document.NewMandateToken([]string{}, p.endpoint, 60)
 
