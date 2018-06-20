@@ -1,8 +1,0 @@
----
-
-mailgun:
-    mailgun_domain: "mg.brickchain.com"
-    mailgun_api_key: "key-14722e58412be8afa29b8588ba0c5a22"
-    mailgun_public_api_key: "pubkey-b3dbc3238e4a8be9065424fda92e6623"
-    mailgun_from: "Brickchain <mailgun@mg.brickchain.com>"
-    mailgun_testmode: "true"

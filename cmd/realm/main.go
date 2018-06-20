@@ -50,7 +50,6 @@ func main() {
 	viper.SetDefault("prod", false)
 	viper.SetDefault("addr", ":6593")
 	viper.SetDefault("base", "")
-	viper.SetDefault("config", "./dev.yml")
 	viper.SetDefault("cryptoprovider", "gorm")
 	viper.SetDefault("gorm_dialect", "sqlite3")
 	viper.SetDefault("gorm_options", "file:./realm.db?cache=shared")
@@ -63,6 +62,7 @@ func main() {
 	viper.SetDefault("proxy_domain", "r.integrity.app")
 	viper.SetDefault("proxy_endpoint", "https://proxy.svc-staging.plusintegrity.com")
 	viper.SetDefault("email_provider", "dummy")
+	viper.SetDefault("mailgun_config", "./dev.yml")
 
 	logger.SetOutput(os.Stdout)
 	logger.SetFormatter(viper.GetString("log_formatter"))
@@ -363,6 +363,7 @@ func loadHandler() http.Handler {
 	r.GET("/realm/v2/realms/:realmID/mandates/role/:roleName", wrapper.Wrap(mandatesController.List))
 	r.GET("/realm/v2/realms/:realmID/mandates", wrapper.Wrap(mandatesController.List))
 
+	// invites
 	invitesController := rest.NewInvitesController(contextProvider)
 	r.GET("/realm/v2/realms/:realmID/invites/role/:roleName", wrapper.Wrap(invitesController.List))
 	r.GET("/realm/v2/realms/:realmID/invites", wrapper.Wrap(invitesController.List))
