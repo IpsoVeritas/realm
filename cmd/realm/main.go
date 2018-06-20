@@ -99,6 +99,8 @@ func loadHandler() http.Handler {
 	prod := viper.GetBool("prod")
 	r := httphandler.NewRouter()
 
+	wrapper := httphandler.NewWrapper(prod)
+
 	var err error
 	if db == nil {
 		db, err = gorm.Open(viper.GetString("gorm_dialect"), viper.GetString("gorm_options"))
@@ -164,7 +166,7 @@ func loadHandler() http.Handler {
 		logger.Fatal(err)
 	}
 
-	files, err := loadFilestore(r)
+	files, err := loadFilestore(wrapper, r)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -308,8 +310,6 @@ func loadHandler() http.Handler {
 
 	logger.Infof("Go to %s?realm=%s to manage your Realm", viper.GetString("adminui"), bootRealmName)
 
-	wrapper := httphandler.NewWrapper(prod)
-
 	// Add bootstrap check middleware
 	bootstrapped := false
 	wrapper.AddMiddleware(func(req httphandler.Request, res httphandler.Response) (httphandler.Response, error) {
@@ -343,7 +343,15 @@ func loadHandler() http.Handler {
 
 	// realms
 	realmsController := rest.NewRealmsController(base, contextProvider, keyset)
+	r.GET("/realm/v2/realms", wrapper.Wrap(realmsController.ListRealms))
+	r.POST("/realm/v2/realms", wrapper.Wrap(realmsController.PostRealm))
 	r.GET("/realm/v2/realms/:realmID", wrapper.Wrap(realmsController.GetRealm))
+	r.PUT("/realm/v2/realms/:realmID", wrapper.Wrap(realmsController.UpdateRealm))
+	r.DELETE("/realm/v2/realms/:realmID", wrapper.Wrap(realmsController.DeleteRealm))
+	r.POST("/realm/v2/realms/:realmID/icon", wrapper.Wrap(realmsController.IconHandler))
+	r.POST("/realm/v2/realms/:realmID/banner", wrapper.Wrap(realmsController.BannerHandler))
+
+	// bootstrap realm
 	r.POST("/realm/v2/realms/:realmID/bootstrap", wrapper.Wrap(realmsController.Bootstrap))
 
 	// mandate tickets
@@ -422,7 +430,7 @@ func loadAssets() realm.AssetProvider {
 	return bindata.NewBindataProvider()
 }
 
-func loadFilestore(r *httprouter.Router) (filestore.Filestore, error) {
+func loadFilestore(wrapper *httphandler.Wrapper, r *httprouter.Router) (filestore.Filestore, error) {
 	switch viper.GetString("filestore") {
 	case "gcs":
 		return filestore.NewGCS(viper.GetString("gcs_bucket"), viper.GetString("gcs_location"), viper.GetString("gcs_project"), viper.GetString("gcs_secret"))
@@ -433,7 +441,7 @@ func loadFilestore(r *httprouter.Router) (filestore.Filestore, error) {
 			return nil, err
 		}
 
-		//r.GET("/realm/v2/files/*filename", httphandler.Wrap(f.Handler))
+		r.GET("/realm/v2/files/*filename", wrapper.Wrap(f.Handler))
 
 		return f, nil
 	}

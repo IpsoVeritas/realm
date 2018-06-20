@@ -69,16 +69,16 @@
 			"revisionTime": "2018-05-22T09:11:34Z"
 		},
 		{
-			"checksumSHA1": "OCQ4s5jIr7YrKk5TmDbo91DSVR4=",
+			"checksumSHA1": "FQoGtRUC9linRwaBkf8ekjJ6PEA=",
 			"path": "github.com/Brickchain/go-httphandler.v2",
-			"revision": "83eb797a1bd452c97d388676a6abe1f4ef597f3c",
-			"revisionTime": "2018-05-24T14:41:34Z"
+			"revision": "8a914d2b817469e73ff4e19db198ad2579c707d7",
+			"revisionTime": "2018-06-20T11:48:45Z"
 		},
 		{
 			"checksumSHA1": "Sy3yfHnf020k39X0QK4Y69LVCi0=",
 			"path": "github.com/Brickchain/go-httphandler.v2/middleware",
-			"revision": "83eb797a1bd452c97d388676a6abe1f4ef597f3c",
-			"revisionTime": "2018-05-24T14:41:34Z"
+			"revision": "8a914d2b817469e73ff4e19db198ad2579c707d7",
+			"revisionTime": "2018-06-20T11:48:45Z"
 		},
 		{
 			"checksumSHA1": "OlmFEwd5eBv6CbT7lY8mquHTSTM=",

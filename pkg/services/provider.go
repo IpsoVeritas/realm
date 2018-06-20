@@ -166,6 +166,10 @@ func (p *RealmsServiceProvider) HasMandateForBootstrapRealm(mandates []httphandl
 	return false
 }
 
+func (p *RealmsServiceProvider) ListRealms() ([]*realm.Realm, error) {
+	return p.realms.List()
+}
+
 func (p *RealmsServiceProvider) Get(realmID string) *RealmService {
 	return NewRealmService(p.base, p, realmID)
 }

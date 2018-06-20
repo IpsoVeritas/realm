@@ -41,18 +41,32 @@ func NewRealmsController(
 
 func (c *RealmsController) ListRealms(req httphandler.AuthenticatedRequest) httphandler.Response {
 
-	realms := make([]*realm.Realm, 0)
+	if c.contextProvider.HasMandateForBootstrapRealm(req.Mandates()) {
 
-	for _, m := range req.Mandates() {
-		context := c.contextProvider.Get(m.Mandate.Realm)
-
-		realm, err := context.Realm()
-		if err == nil {
-			realms = append(realms, realm)
+		realms, err := c.contextProvider.ListRealms()
+		if err != nil {
+			return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to list realms"))
 		}
+
+		return httphandler.NewJsonResponse(http.StatusOK, realms)
+
+	} else {
+
+		realms := make([]*realm.Realm, 0)
+
+		for _, m := range req.Mandates() {
+			context := c.contextProvider.Get(m.Mandate.Realm)
+
+			realm, err := context.Realm()
+			if err == nil {
+				realms = append(realms, realm)
+			}
+		}
+
+		return httphandler.NewJsonResponse(http.StatusOK, realms)
+
 	}
 
-	return httphandler.NewJsonResponse(http.StatusOK, realms)
 }
 
 func (c *RealmsController) GetRealm(req httphandler.AuthenticatedRequest) httphandler.Response {
