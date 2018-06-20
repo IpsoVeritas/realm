@@ -343,6 +343,7 @@ func loadHandler() http.Handler {
 
 	// realms
 	realmsController := rest.NewRealmsController(base, contextProvider, keyset)
+	r.GET("/realm/v2/realms/:realmID", wrapper.Wrap(realmsController.GetRealm))
 	r.POST("/realm/v2/realms/:realmID/bootstrap", wrapper.Wrap(realmsController.Bootstrap))
 
 	// mandate tickets
