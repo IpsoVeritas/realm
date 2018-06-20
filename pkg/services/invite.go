@@ -206,7 +206,9 @@ func (i *InviteService) Callback(inviteID string, jws *jose.JsonWebSignature) (*
 	mandate.Realm = i.realmID
 	mandate.RoleName = role.Description
 	mandate.ValidFrom = time.Now().UTC()
-	mandate.ValidUntil = time.Now().UTC().Add(time.Second * time.Duration(invite.TTL))
+	if invite.TTL > 0 {
+		mandate.ValidUntil = time.Now().UTC().Add(time.Second * time.Duration(invite.TTL))
+	}
 	mandate.Recipient = userKey
 	mandate.Sender = invite.Sender
 

@@ -35,12 +35,14 @@ type Proxy struct {
 	connected bool
 	handler   http.Handler
 	key       *jose.JsonWebKey
+	lastPing  time.Time
 }
 
 func NewProxy(endpoint string) (*Proxy, error) {
 	p := &Proxy{
 		endpoint:  endpoint,
 		writeLock: &sync.Mutex{},
+		lastPing:  time.Now(),
 	}
 
 	go p.subscribe()
@@ -77,6 +79,8 @@ func (p *Proxy) connect() error {
 	}
 
 	p.connected = true
+
+	p.lastPing = time.Now()
 
 	return nil
 }
@@ -153,6 +157,20 @@ func (p *Proxy) subscribe() error {
 		}
 	}
 
+	go func() {
+		for {
+			if !p.connected {
+				time.Sleep(time.Second)
+				continue
+			}
+
+			if p.lastPing.Add(time.Second * 20).Before(time.Now()) {
+				disconnect()
+				time.Sleep(time.Second)
+			}
+		}
+	}()
+
 	for {
 		if !p.connected {
 			logger.Debug("Connecting to proxy...")
@@ -191,6 +209,9 @@ func (p *Proxy) subscribe() error {
 		}
 
 		switch docType {
+		case proxy.SchemaBase + "/ping.json":
+			p.lastPing = time.Now()
+
 		case proxy.SchemaBase + "/registration-response.json":
 			r := &proxy.RegistrationResponse{}
 			if err := json.Unmarshal(body, &r); err != nil {
