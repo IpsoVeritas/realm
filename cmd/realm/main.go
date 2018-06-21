@@ -391,6 +391,7 @@ func loadHandler() http.Handler {
 	rolesController := rest.NewRolesController(contextProvider)
 	r.GET("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.ListRoles))
 	r.GET("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.GetRole))
+	r.POST("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.SetRole))
 
 	// service listing
 	servicesController := rest.NewServicesController(contextProvider)
