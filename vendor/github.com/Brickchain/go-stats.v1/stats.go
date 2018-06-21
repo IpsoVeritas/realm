@@ -62,11 +62,14 @@ func Setup(sinkType, name string) error {
 		http.Handle("/metrics", promhttp.Handler())
 	case "inmem":
 		inmem := metrics.NewInmemSink(time.Second*1, time.Minute*5)
-		_ = metrics.NewInmemSignal(inmem, syscall.SIGUSR1, os.Stdout)
+		_ = metrics.NewInmemSignal(inmem, metrics.DefaultSignal, os.Stdout)
 		go func() {
 			for {
 				time.Sleep(time.Second * 60)
-				syscall.Kill(syscall.Getpid(), syscall.SIGUSR1)
+				proc, err := os.FindProcess(syscall.Getpid())
+				if err == nil {
+					proc.Signal(metrics.DefaultSignal)
+				}
 			}
 		}()
 		sink = inmem
