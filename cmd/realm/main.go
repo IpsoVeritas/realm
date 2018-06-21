@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"runtime"
 	"strings"
 	"time"
 
@@ -22,7 +23,9 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
+	colorable "github.com/mattn/go-colorable"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/tylerb/graceful"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
@@ -64,8 +67,13 @@ func main() {
 	viper.SetDefault("email_provider", "dummy")
 	viper.SetDefault("mailgun_config", "./dev.yml")
 
-	logger.SetOutput(os.Stdout)
-	logger.SetFormatter(viper.GetString("log_formatter"))
+	if runtime.GOOS == "windows" {
+		logger.SetOutput(colorable.NewColorableStdout())
+		logger.SetLogrusFormatter(&logrus.TextFormatter{ForceColors: true})
+	} else {
+		logger.SetOutput(os.Stdout)
+		logger.SetFormatter(viper.GetString("log_formatter"))
+	}
 	logger.SetLevel(viper.GetString("log_level"))
 	logger.AddContext("service", "realm-ng")
 	logger.AddContext("version", version.Version)
@@ -359,9 +367,11 @@ func loadHandler() http.Handler {
 	r.GET("/realm/v2/realms/:realmID/tickets/:ticketID/issue", wrapper.Wrap(mandateTicketController.IssueMandate))
 	r.POST("/realm/v2/realms/:realmID/tickets/:ticketID/callback", wrapper.Wrap(mandateTicketController.IssueMandateCallback))
 
+	// mandates
 	mandatesController := rest.NewMandatesController(contextProvider)
 	r.GET("/realm/v2/realms/:realmID/mandates/role/:roleName", wrapper.Wrap(mandatesController.List))
 	r.GET("/realm/v2/realms/:realmID/mandates", wrapper.Wrap(mandatesController.List))
+	r.PUT("/realm/v2/realms/:realmID/mandates/:mandateID/revoke", wrapper.Wrap(mandatesController.Revoke))
 
 	// invites
 	invitesController := rest.NewInvitesController(contextProvider)
@@ -389,9 +399,12 @@ func loadHandler() http.Handler {
 
 	// roles
 	rolesController := rest.NewRolesController(contextProvider)
-	r.GET("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.ListRoles))
-	r.GET("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.GetRole))
-	r.POST("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.SetRole))
+	r.GET("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.List))
+	r.GET("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.Get))
+	r.POST("/realm/v2/realms/:realmID/roles", wrapper.Wrap(rolesController.Set))
+	r.POST("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.Set))
+	r.PUT("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.Set))
+	r.DELETE("/realm/v2/realms/:realmID/roles/:roleID", wrapper.Wrap(rolesController.Delete))
 
 	// service listing
 	servicesController := rest.NewServicesController(contextProvider)

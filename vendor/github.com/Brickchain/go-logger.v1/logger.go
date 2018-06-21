@@ -1,5 +1,5 @@
 /*
-The package Logger is a wrapper for the Logrus logger package.
+Package logger is a wrapper for the Logrus logger package.
 
 Logger is used by most Brickchain software to enable context based logging with details needed by each component.
 
@@ -77,10 +77,15 @@ func SetFormatter(formatter string) {
 	default:
 		_formatter = &logrus.TextFormatter{}
 	}
+	SetLogrusFormatter(_formatter)
+}
+
+// SetLogrusFormatter sets the logrus formatter to be used
+func SetLogrusFormatter(formatter logrus.Formatter) {
 	mu.Lock()
 	defer mu.Unlock()
 	data := ctxlogger.Data
-	logrus.SetFormatter(_formatter)
+	logrus.SetFormatter(formatter)
 	ctxlogger = logrus.WithFields(data)
 }
 
