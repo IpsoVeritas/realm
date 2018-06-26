@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/Brickchain/go-crypto.v2"
-	"github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/jinzhu/gorm"
@@ -266,11 +265,6 @@ func loadHandler() http.Handler {
 
 		logger.Infof("Bootstrap password: %s", pw)
 
-		for _, roleName := range []string{"admin", "guest", "services"} {
-			if err := bootContext.Roles().Set(document.NewRole(fmt.Sprintf("%s@%s", roleName, bootRealmName))); err != nil {
-				logger.Fatal("Failed to create role %s:", roleName, err)
-			}
-		}
 	} else {
 		bootContext = contextProvider.Get(bootRealmName)
 
@@ -291,16 +285,6 @@ func loadHandler() http.Handler {
 			}
 
 			logger.Infof("Bootstrap password: %s", pw)
-		}
-	}
-
-	for _, roleName := range []string{"admin", "guest", "services"} {
-		fullName := fmt.Sprintf("%s@%s", roleName, bootRealmName)
-		if _, err := bootContext.Roles().ByName(fullName); err != nil {
-			logger.Infof("Creating role: %s", fullName)
-			if err := bootContext.Roles().Set(document.NewRole(fullName)); err != nil {
-				logger.Fatal("Failed to create role %s:", roleName, err)
-			}
 		}
 	}
 
