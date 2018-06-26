@@ -50,7 +50,6 @@ func NewRealmsServiceProvider(
 	mandateTickets realm.MandateTicketProvider,
 	roles realm.RoleProvider,
 	settings realm.SettingProvider,
-	filestore filestore.Filestore,
 	sks keys.StoredKeyService,
 	kek []byte,
 	ps pubsub.PubSubInterface,
@@ -70,7 +69,6 @@ func NewRealmsServiceProvider(
 		mandateTickets: mandateTickets,
 		roles:          roles,
 		settings:       settings,
-		filestore:      filestore,
 		sks:            sks,
 		kek:            kek,
 		pubsub:         ps,
@@ -85,6 +83,10 @@ func NewRealmsServiceProvider(
 
 func (p *RealmsServiceProvider) SetBase(base string) {
 	p.base = base
+}
+
+func (p *RealmsServiceProvider) SetFilestore(filestore filestore.Filestore) {
+	p.filestore = filestore
 }
 
 func (p *RealmsServiceProvider) LoadBootstrapRealm(bootstrapRealmID string) error {

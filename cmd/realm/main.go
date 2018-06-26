@@ -174,11 +174,6 @@ func loadHandler() http.Handler {
 		logger.Fatal(err)
 	}
 
-	files, err := loadFilestore(wrapper, r)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
 	pubsub, err := loadPubSub()
 	if err != nil {
 		logger.Fatal(err)
@@ -212,7 +207,6 @@ func loadHandler() http.Handler {
 		mandateTickets,
 		roles,
 		settings,
-		files,
 		sks, kek[0:32],
 		pubsub,
 		viper.GetString("realmtopic"),
@@ -316,6 +310,12 @@ func loadHandler() http.Handler {
 		contextProvider.SetBase(base)
 	}
 
+	files, err := loadFilestore(base, wrapper, r)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	contextProvider.SetFilestore(files)
 	logger.Infof("Go to %s?realm=%s to manage your Realm", viper.GetString("adminui"), bootRealmName)
 
 	// Add bootstrap check middleware
@@ -445,12 +445,12 @@ func loadAssets() realm.AssetProvider {
 	return bindata.NewBindataProvider()
 }
 
-func loadFilestore(wrapper *httphandler.Wrapper, r *httprouter.Router) (filestore.Filestore, error) {
+func loadFilestore(base string, wrapper *httphandler.Wrapper, r *httprouter.Router) (filestore.Filestore, error) {
 	switch viper.GetString("filestore") {
 	case "gcs":
 		return filestore.NewGCS(viper.GetString("gcs_bucket"), viper.GetString("gcs_location"), viper.GetString("gcs_project"), viper.GetString("gcs_secret"))
 	default:
-		l := fmt.Sprintf("%s/realm/v2/files", viper.GetString("base"))
+		l := fmt.Sprintf("%s/realm/v2/files", base)
 		f, err := filestore.NewFilesystem(l, viper.GetString("filestore_dir"))
 		if err != nil {
 			return nil, err
