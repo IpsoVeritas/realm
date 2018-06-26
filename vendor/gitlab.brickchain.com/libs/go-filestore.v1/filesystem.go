@@ -78,7 +78,7 @@ func (f *Filesystem) Handler(w http.ResponseWriter, r *http.Request, params http
 		return nil
 	}
 
-	mimeType := mime.TypeByExtension(name)
+	mimeType := mime.TypeByExtension(filepath.Ext(name))
 	w.Header().Set("Content-Type", mimeType)
 
 	w.Write(bytes)

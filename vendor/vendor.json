@@ -519,10 +519,10 @@
 			"revisionTime": "2018-02-23T21:31:57Z"
 		},
 		{
-			"checksumSHA1": "e6lhs23yKndfRr2WBYfoIBEJfMs=",
+			"checksumSHA1": "O/8ClD9yiAkczLCKz+9kp9OrMRY=",
 			"path": "gitlab.brickchain.com/libs/go-filestore.v1",
-			"revision": "79e80047d4294cfcaeb640728938ba852a607a0e",
-			"revisionTime": "2018-06-26T10:39:23Z"
+			"revision": "b753b238ac0f31498d946f66885cad160decfb51",
+			"revisionTime": "2018-06-26T12:02:17Z"
 		},
 		{
 			"checksumSHA1": "h3jNDPBp0EuXmjxSxGSVpnK/vWE=",
