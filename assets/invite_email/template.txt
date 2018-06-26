@@ -1,3 +1,23 @@
-You have been invited to join {{ .role }}.\n
-Go here {{ .url }} to get your mandate with {{ .realm }}.\n
-{{ .text }}
+You have been invited to {{ .realm }} services.
+
+Go here {{ .link }} to access the services.
+
+You will need to use the Integrity app on your device in order 
+to identify yourself and access {{ .realm }}'s services.
+
+If you do not have the app yet, the invitation link will redirect 
+you to the download page. Once the app is installed, just click 
+the above link again to gain access.
+
+About the Integrity app
+
+The Integrity app is your secure digital passport. You use it 
+to interact with services that use Integrity's decentralized 
+infrastructure. You have control of the information in the passport, 
+which belongs to you and resides in your device, and it is operated 
+independently from the realms that you access. When you share data 
+with a service, only you and the service you share with can see 
+the transaction.
+
+best regards,
+support@plusintegrity.com

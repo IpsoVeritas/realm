@@ -1,130 +1,157 @@
 <!doctype HTML>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>plusintegrity</title>
-  <style>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>plusintegrity</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Source Sans Pro', Verdana, Geneva, sans-serif;
+            font-size: 16px;
+            line-height: 1.63;
+            font-weight: normal;
+            color: #7f7f7f;
+        }
 
- body {
-     font-family: SourceSansPro, Robota, Helvetica, sans-serif;
-     font-weight: normal;
-     font-size: 14px;
-     color: #202020; 
- }
+        a {
+            text-decoration: none;
+        }
 
- table {
-     width: 553px;
-     margin: auto;
- }
+        a img {
+            border: none;
+        }
 
- table td {
-     width: 513px;
-     padding: 20px 80px;
- }
+        h1 {
+            font-size: 28px;
+            font-weight: 300;
+            line-height: 38px;
+            margin: 25px 0;
+            padding: 0;
+        }
 
- h1 {
-     font-weight: normal;
-     font-size: 20px;
- }
+        .main {
+            width: 600px;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+        }
 
- h2,h3 {
-     font-weight: normal;
-     font-size: 18px;
- }
+        .col-side {
+            width: 80px;
+        }
 
- .logo{
-     padding: 0px;
- }
+        .b_grey {
+            background-color: #f0f0f0;
+        }
 
- .heading{
-     background-color: #20afe2;
-     color: white;
- }
+        .txt-orange {
+            color: #f76a0a;
+        }
 
- .bluetext {
-     color: #004b97;
- }
+        .txt-black {
+            color: #000000;
+        }
 
- .orangetext {
-     color: #f76a0a;
- }
+        .btn-confirm {
+            text-align: center;
+        }
 
- .button {
-     display: block;
-     position: inline;
-     border-radius: 30px;
-     padding-top: 10px;
-     padding-bottom: 10px;
-     padding-left: 20px;
-     padding-right: 20px;
-     width: 200px;
-     background-color: white;
-     color:  #20afe2;
-  }
+        .btn-confirm a {
+            color: white;
+        }
 
-  a {
-     text-decoration: none;
-  }
+        .footer a {
+            font-size: 11px;
+            line-height: 2.36;
+            color: #7f7f7f;
+        }
 
- .text {
-      text-align: center;
-      color: #808080;
- }
-
- .footer {
-     text-align: center;
-     background-color: #f0f0f0;
- }
-
- .footer > a {
-     color: #505050;
-     text-decoration: none;
- }
-
-</style>
-<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        .footer .separator {
+            font-size: 12px;
+        }
+    </style>
 </head>
-<body>
 
-<table width="514" border="0">
-    <tr><td class="logo">
-        <center><img src="cid:mail-logo.png" alt="+integrity."/></center>
-    </td></tr>
-    <tr><td class="heading" background-color="#20afe2">
-        <center>
-            <h1>Hello, this is your invite to
-            <div class="realm-name">{{ .realm }}</h1>
-            <a href="{{ .link }}"><div class="button">Access the services</div></a>
-        </center>
-    </td></tr>
-    <tr><td class="text">
-        <p>
-            You need the +Integrity App on your phone to identify yourself and
-            access {{ .realm }} services. If you don't have it yet, this invite
-            link will redirect you to the download page. Once installed,
-            just launch the application and click the link again. </p>
-    </td></tr>
-    <tr><td class="footer"  background-color="#f0f0f0">
-        <h3 class="bluetext">The +Integrity App</h3>
-        <p>
-            The +Integrity App is your secure passport.
-            It belongs to you and is independent from the service place you access.
-            +Integrity helps people create, publish and discover services across
-            professional networks and personal communities. </p>
-    </td></tr>
-    <tr><td class="text">
-        <h3 class="orangetext">About us</h3>
-        <p>+Integrity is designed by Brickchain Ltd, with a passionate team
-            working between Stockholm, Paris and London.</p>
-    </td></tr>
-    <tr><td class="footer" background-color="#f0f0f0">
-        <a href="https://plusintegrity.com/">+Integrity.com</a> &nbsp;
-        <a href="https://plusintegrity.com/faq/">FAQ</a>  &nbsp;
-        <a href="https://plusintegrity.com/webterms/">Terms</a>  &nbsp;
-        <a href="mailto:support@plusintegrity.com">support@plusintegrity.com</a>
-    </td></tr>
-</table>
+<body bgcolor="white">
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <table class="main" cellspacing="0" cellpadding="0" border="0" bgcolor="white">
+                    <tr height="3">
+                        <td colspan="3">
+                                <img src="cid:colors.jpg" alt="" width="600"
+                                height="3" style="display:block;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-side"><img src="cid:spacer.png" alt="" width="80"
+                            height="1" /></td>
+                        <td height="85" align="center" valign="center">
+                            <a href="https://plusintegrity.com">
+                                <img src="cid:email-logo-integrity.png" alt="+integrity" width="115"
+                                    height="27" />
+                            </a>
+                        </td>
+                        <td class="col-side"><img src="cid:spacer.png" alt="" width="80"
+                            height="1" /></td>
+                    </tr>
+                    <tr class="b_grey" height="175">
+                        <td class="col-side"></td>
+                        <td valign="top">
+                            <h1>You have been invited to {{ .realm }} services</h1>
 
+                            <table class="btn-confirm" width="200" height="50" bgcolor="#f76a0a" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td height="50" valign="center">
+                                        <a href="{{ .link }}">Access the services</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col-side"></td>
+                    </tr>
+                    <tr class="b_grey" height="30">
+                        <td class="col-side"></td>
+                        <td>&nbsp;</td>
+                        <td class="col-side"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-side"></td>
+                        <td valign="center">
+                                <br>You will need to use the <span class="txt-orange"><b>Integrity app</b></span> on your device in order to identify yourself and access {{ .realm }}'s services.<br><br>If you do not have the app yet, the invitation link will redirect you to the download page. Once the app is installed, just click the above link again to gain access.<br><br><span class="txt-black">About the Integrity app</span><br><br>The Integrity app is your secure digital passport. You use it to interact with services that use Integrity's decentralized infrastructure. You have control of the information in the passport, which belongs to you and resides in your device, and it is operated independently from the realms that you access. When you share data with a service, only you and the service you share with can see the transaction.<br><br>
+                        </td>
+                        <td class="col-side"></td>
+                    </tr>
+                    <tr class="b_grey footer">
+                        <td class="col-side"></td>
+                        <td height="45" valign="bottom">
+                            <a href="https://plusintegrity.com/terms-and-conditions/#service-terms" style="font-family: 'Source Sans Pro', Verdana, Geneva, sans-serif; color: #7f7f7f; font-size: 11px;">Terms and Condtions</a> &nbsp; &nbsp;
+                            <span class="separator">|</span>&nbsp; &nbsp;
+                            <a href="https://plusintegrity.com/terms-and-conditions/#privacy" style="font-family: 'Source Sans Pro', Verdana, Geneva, sans-serif; color: #7f7f7f; font-size: 11px;">Privacy Policy </a> &nbsp; &nbsp;
+                            <span class="separator">|</span>&nbsp; &nbsp;
+                            <a href="https://plusintegrity.com/contact/" style="font-family: 'Source Sans Pro', Verdana, Geneva, sans-serif; color: #7f7f7f; font-size: 11px;">Contact</a>
+                        </td>
+                        <td class="col-side"></td>
+                    </tr>
+                    <tr class="b_grey">
+                        <td class="col-side"></td>
+                        <td height="45" valign="top">
+                            <a href="https://plusintegrity.com">
+                                <img src="cid:email-logo-integrity.png" alt="+integrity" width="61" height="14" />
+                            </a>
+                            <img src="cid:email-powered-by.png" alt="powered by" width="82" height="14" />
+                            <a href="https://brickchain.com">
+                                <img src="cid:email-logo-brickchain.png" alt="brickchain" width="58"
+                                    height="14" />
+                            </a>
+                        </td>
+                        <td class="col-side"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
+
 </html>
