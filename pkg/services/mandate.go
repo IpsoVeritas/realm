@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 
 	"github.com/Brickchain/go-document.v2"
+
+	crypto "github.com/Brickchain/go-crypto.v2"
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 )
@@ -65,6 +68,24 @@ func (m *MandateService) Issue(mandate *document.Mandate, label string) (*realm.
 		Mandate: *mandate,
 		Signed:  compact,
 	}
+
+	if err := m.Set(issued); err != nil {
+		return nil, err
+	}
+
+	return issued, nil
+}
+
+func (m *MandateService) Revoke(issued *realm.IssuedMandate) (*realm.IssuedMandate, error) {
+
+	_, err := crypto.UnmarshalSignature([]byte(issued.Signed))
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal signature")
+	}
+
+	// TODO: Implement revocations logic
+
+	issued.Status = document.MandateRevoked
 
 	if err := m.Set(issued); err != nil {
 		return nil, err

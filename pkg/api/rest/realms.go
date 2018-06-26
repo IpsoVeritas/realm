@@ -164,6 +164,8 @@ func (c *RealmsController) UpdateRealm(req httphandler.AuthenticatedRequest) htt
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to unmarshal realm json"))
 	}
 
+	realm.Descriptor.Description = realm.Description
+
 	if err := context.Set(realm); err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to save realm"))
 	}

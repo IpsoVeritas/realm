@@ -74,10 +74,43 @@ func (c *MandatesController) Get(req httphandler.AuthenticatedRequest) httphandl
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
 	}
 
-	mandates, err := context.Mandates().Get(mandateID)
+	mandate, err := context.Mandates().Get(mandateID)
 	if err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not get mandates"))
 	}
 
-	return httphandler.NewJsonResponse(http.StatusOK, mandates)
+	return httphandler.NewJsonResponse(http.StatusOK, mandate)
+}
+
+func (c *MandatesController) Revoke(req httphandler.AuthenticatedRequest) httphandler.Response {
+	total := stats.StartTimer("api.mandates.Revoke.total")
+	defer total.Stop()
+
+	realmID := req.Params().ByName("realmID")
+	if realmID == "" {
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
+	}
+
+	context := c.contextProvider.Get(realmID)
+
+	if !context.HasMandateForRealm(req.Mandates()) {
+		return httphandler.NewErrorResponse(http.StatusForbidden, errors.New("No mandate for realm"))
+	}
+
+	mandateID := req.Params().ByName("mandateID")
+	if realmID == "" {
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
+	}
+
+	mandate, err := context.Mandates().Get(mandateID)
+	if err != nil {
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not get mandates"))
+	}
+
+	mandate, err = context.Mandates().Revoke(mandate)
+	if err != nil {
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not revoke mandate"))
+	}
+
+	return httphandler.NewJsonResponse(http.StatusOK, mandate)
 }
