@@ -48,8 +48,15 @@ func (f *Filesystem) Write(name string, input io.Reader) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer file.Close()
 
+	file.Truncate(0)
+	file.Seek(0, 0)
 	_, err = io.Copy(file, input)
+	if err != nil {
+		return "", err
+	}
+	file.Sync()
 
 	fullname := fmt.Sprintf("%s/%s", f.base, name)
 
