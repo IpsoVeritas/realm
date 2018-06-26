@@ -1,21 +1,25 @@
 package realm
 
+import "time"
+
 type Invite struct {
-	ID          string `json:"@id,omitempty" gorm:"primary_key"`
-	Type        string `json:"@type,omitempty"`
-	Realm       string `json:"realm" gorm:"index"`
-	Name        string `json:"name,omitempty"`
-	Role        string `json:"role,omitempty" gorm:"index"`
-	Status      string `json:"status,omitempty"`
-	TicketID    string `json:"ticketID,omitempty"`
-	MessageType string `json:"messageType,omitempty"`
-	MessageURI  string `json:"messageURI,omitempty"`
-	Sent        bool   `json:"sent,omitempty"`
-	Text        string `json:"text,omitempty"`
-	TTL         int    `json:"ttl,omitempty"`
-	Sender      string `json:"sender,omitempty"`
-	CreateUser  bool   `json:"createUser,omitempty"`
-	KeyLevel    int    `json:"keyLevel,omitempty"`
+	ID          string     `json:"@id,omitempty" gorm:"primary_key"`
+	Type        string     `json:"@type,omitempty"`
+	Realm       string     `json:"realm" gorm:"index"`
+	Name        string     `json:"name,omitempty"`
+	Role        string     `json:"role,omitempty" gorm:"index"`
+	Status      string     `json:"status,omitempty"`
+	TicketID    string     `json:"ticketID,omitempty"`
+	MessageType string     `json:"messageType,omitempty"`
+	MessageURI  string     `json:"messageURI,omitempty"`
+	Sent        bool       `json:"sent,omitempty"`
+	Text        string     `json:"text,omitempty"`
+	TTL         int        `json:"ttl,omitempty"`
+	Sender      string     `json:"sender,omitempty"`
+	CreateUser  bool       `json:"createUser,omitempty"`
+	KeyLevel    int        `json:"keyLevel,omitempty"`
+	ValidFrom   *time.Time `json:"validFrom,omitempty"`
+	ValidUntil  *time.Time `json:"validUntil,omitempty"`
 }
 
 type InviteProvider interface {

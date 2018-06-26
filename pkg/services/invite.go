@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"time"
 
 	crypto "github.com/Brickchain/go-crypto.v2"
 	document "github.com/Brickchain/go-document.v2"
@@ -205,10 +204,8 @@ func (i *InviteService) Callback(inviteID string, jws *jose.JsonWebSignature) (*
 	mandate := document.NewMandate(invite.Role)
 	mandate.Realm = i.realmID
 	mandate.RoleName = role.Description
-	mandate.ValidFrom = time.Now().UTC()
-	if invite.TTL > 0 {
-		mandate.ValidUntil = time.Now().UTC().Add(time.Second * time.Duration(invite.TTL))
-	}
+	mandate.ValidFrom = invite.ValidFrom
+	mandate.ValidUntil = invite.ValidUntil
 	mandate.Recipient = userKey
 	mandate.Sender = invite.Sender
 

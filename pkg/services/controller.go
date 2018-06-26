@@ -90,7 +90,6 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 	// mandate.Label = fmt.Sprintf("Service: %s", controller.Name)
 	mandate.Recipient = controller.Descriptor.Key
 	mandate.Realm = c.realmID
-	mandate.ValidFrom = time.Now().UTC()
 
 	issued, err := c.realm.Mandates().Issue(mandate, fmt.Sprintf("Service: %s", controller.Name))
 	if err != nil {

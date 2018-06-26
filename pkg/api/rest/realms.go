@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/Brickchain/go-crypto.v2"
 	"github.com/Brickchain/go-document.v2"
@@ -367,7 +366,6 @@ func (c *RealmsController) JoinRealmCallback(req httphandler.Request) httphandle
 	// TODO: get users root key when we have key lists
 	mandate := document.NewMandate(guestRole.Name)
 	mandate.RoleName = guestRole.Description
-	mandate.ValidFrom = time.Now().UTC()
 	mandate.Recipient = userKey
 	mandate.Sender = realmID
 	mandate.Realm = realmID
