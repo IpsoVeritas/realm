@@ -168,6 +168,8 @@ func (p *Proxy) subscribe() error {
 				disconnect()
 				time.Sleep(time.Second)
 			}
+
+			time.Sleep(time.Second)
 		}
 	}()
 
