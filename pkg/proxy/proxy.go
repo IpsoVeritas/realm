@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -260,7 +261,12 @@ func (p *Proxy) subscribe() error {
 				}
 
 				if req.Body != "" {
-					r.Body = nopCloser{bytes.NewBufferString(req.Body)}
+					body, err := base64.StdEncoding.DecodeString(req.Body)
+					if err == nil {
+						r.Body = nopCloser{bytes.NewBuffer(body)}
+					} else {
+						logger.Error("Failed to decode body")
+					}
 				}
 
 				w := httptest.NewRecorder()
