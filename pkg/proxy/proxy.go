@@ -277,7 +277,7 @@ func (p *Proxy) subscribe() error {
 				res.ContentType = w.Result().Header.Get("Content-Type")
 
 				body, _ := ioutil.ReadAll(w.Result().Body)
-				res.Body = string(body)
+				res.Body = base64.StdEncoding.EncodeToString(body)
 
 				res.Headers = make(map[string]string)
 				for k, v := range w.Result().Header {
