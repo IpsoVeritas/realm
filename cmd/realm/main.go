@@ -186,14 +186,14 @@ func loadHandler() http.Handler {
 	// TODO: build key set
 	keyset := &jose.JsonWebKeySet{}
 
-	bootRealmName, err := settings.Get("", "bootRealmName")
-	if err != nil || bootRealmName == "" && viper.GetString("base") != "" {
+	bootRealmID, err := settings.Get("", "bootRealmID")
+	if err != nil || bootRealmID == "" && viper.GetString("base") != "" {
 		baseURL, err := url.Parse(viper.GetString("base"))
 		if err != nil {
 			logger.Fatal(errors.Wrap(err, "failed to parse base URL"))
 		}
 
-		bootRealmName = baseURL.Host
+		bootRealmID = baseURL.Host
 	}
 
 	contextProvider := services.NewRealmsServiceProvider(
@@ -216,14 +216,11 @@ func loadHandler() http.Handler {
 
 	var bootContext *services.RealmService
 
-	// logger.Infof("Bootstrap realm name: %s", bootRealmName)
-	if err := contextProvider.LoadBootstrapRealm(bootRealmName); err != nil {
-		if bootRealmName != "" {
-			logger.Infof("Bootstrap realm does not exist, setting up realm %s", bootRealmName)
+	if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
+		if bootRealmID != "" {
+			logger.Infof("Bootstrap realm does not exist, setting up realm %s", bootRealmID)
 			_, err = contextProvider.New(&realm.Realm{
-				ID:         bootRealmName,
-				Name:       bootRealmName,
-				AdminRoles: []string{fmt.Sprintf("admin@%s", bootRealmName)},
+				ID: bootRealmID,
 			}, nil)
 			if err != nil {
 				logger.Fatal(err)
@@ -239,22 +236,22 @@ func loadHandler() http.Handler {
 			contextProvider.SetBase(fmt.Sprintf("https://%s", name))
 
 			rd, err := contextProvider.New(&realm.Realm{
-				Name: name,
+				ID: name,
 			}, key)
 			if err != nil {
 				logger.Fatal(err)
 			}
 
-			bootRealmName = rd.Name
-			settings.Set("", "bootRealmName", bootRealmName)
-			logger.Infof("Created bootstrap realm: %s", bootRealmName)
+			bootRealmID = rd.ID
+			settings.Set("", "bootRealmID", bootRealmID)
+			logger.Infof("Created bootstrap realm: %s", bootRealmID)
 		}
 
-		if err := contextProvider.LoadBootstrapRealm(bootRealmName); err != nil {
+		if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
 			logger.Fatal(err)
 		}
 
-		bootContext = contextProvider.Get(bootRealmName)
+		bootContext = contextProvider.Get(bootRealmID)
 
 		pw, err := crypto.GenerateRandomString(10)
 		if err != nil {
@@ -266,7 +263,7 @@ func loadHandler() http.Handler {
 		logger.Infof("Bootstrap password: %s", pw)
 
 	} else {
-		bootContext = contextProvider.Get(bootRealmName)
+		bootContext = contextProvider.Get(bootRealmID)
 
 		b, err := bootContext.Settings().Get("bootstrapped")
 		if err != nil {
@@ -290,7 +287,7 @@ func loadHandler() http.Handler {
 
 	base := viper.GetString("base")
 	if base == "" {
-		base = fmt.Sprintf("https://%s", bootRealmName)
+		base = fmt.Sprintf("https://%s", bootRealmID)
 		contextProvider.SetBase(base)
 	}
 
@@ -300,7 +297,7 @@ func loadHandler() http.Handler {
 	}
 
 	contextProvider.SetFilestore(files)
-	logger.Infof("Go to %s?realm=%s to manage your Realm", viper.GetString("adminui"), bootRealmName)
+	logger.Infof("Go to %s?realm=%s to manage your Realm", viper.GetString("adminui"), bootRealmID)
 
 	// Add bootstrap check middleware
 	bootstrapped := false
@@ -400,7 +397,7 @@ func loadHandler() http.Handler {
 
 	handler := httphandler.LoadMiddlewares(r, version.Version)
 
-	if strings.HasSuffix(bootRealmName, viper.GetString("proxy_domain")) {
+	if strings.HasSuffix(bootRealmID, viper.GetString("proxy_domain")) {
 		key, err := bootContext.Key()
 		if err != nil {
 			logger.Fatal(err)

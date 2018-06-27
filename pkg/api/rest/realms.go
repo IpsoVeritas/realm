@@ -111,17 +111,13 @@ func (c *RealmsController) PostRealm(req httphandler.AuthenticatedRequest) httph
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to unmarshal realm json"))
 	}
 
-	if realm.ID == "" {
-		realm.ID = realm.Name
-	}
-
 	re, err := regexp.Compile("^[0-9|a-z|\\-\\.]*$")
 	if err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not build regex matcher"))
 	}
 
-	if !re.MatchString(realm.Name) {
-		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Bad realm name"))
+	if !re.MatchString(realm.ID) {
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Bad realm ID"))
 	}
 
 	_, err = c.contextProvider.Get(realm.ID).Realm()
@@ -163,7 +159,7 @@ func (c *RealmsController) UpdateRealm(req httphandler.AuthenticatedRequest) htt
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to unmarshal realm json"))
 	}
 
-	realm.Descriptor.Description = realm.Description
+	realm.Descriptor.Label = realm.Label
 
 	if err := context.Set(realm); err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to save realm"))

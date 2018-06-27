@@ -132,6 +132,8 @@ func (p *RealmsServiceProvider) Bootstrap(password string) (*realm.MandateTicket
 	ticket.Realm = p.bootstrapRealm.ID
 
 	ticket.Mandate = document.NewMandate(p.bootstrapRealm.AdminRoles[0])
+	ticket.Mandate.Realm = ticket.Realm
+	ticket.Mandate.RoleName = "Admin"
 
 	ticket.ScopeRequest = document.NewScopeRequest(1000)
 	ticket.ScopeRequest.Contract = document.NewContract()
@@ -186,12 +188,8 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		}
 	}
 
-	if realmData.Name == "" {
-		realmData.Name = fmt.Sprintf("%s.%s", crypto.Thumbprint(key), viper.GetString("proxy_domain"))
-	}
-
 	if realmData.ID == "" {
-		realmData.ID = realmData.Name
+		realmData.ID = fmt.Sprintf("%s.%s", crypto.Thumbprint(key), viper.GetString("proxy_domain"))
 	}
 
 	re, err := regexp.Compile("^[0-9|a-z|A-Z||\\-\\.\\:]*$")
@@ -199,8 +197,8 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		return nil, errors.Wrap(err, "could not build regex matcher")
 	}
 
-	if !re.MatchString(realmData.Name) {
-		return nil, errors.New("Bad realm name")
+	if !re.MatchString(realmData.ID) {
+		return nil, errors.New("Bad realm ID")
 	}
 
 	_, err = p.realms.Get(realmData.ID)
@@ -214,13 +212,13 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 	}
 
 	if len(realmData.AdminRoles) < 1 {
-		realmData.AdminRoles = []string{"admin@" + realmData.Name}
+		realmData.AdminRoles = []string{"admin@" + realmData.ID}
 	}
 
 	realmData.PublicKey = pk
 
 	realmData.Descriptor = document.NewRealmDescriptor(realmData.ID, pk, fmt.Sprintf("%s/realm/v2/realms/%s/services", p.base, realmData.ID))
-	realmData.Descriptor.Description = realmData.Description
+	realmData.Descriptor.Label = realmData.Label
 
 	skey := keys.NewStoredKey(realmData.ID)
 	if err := skey.Encrypt(key, p.kek); err != nil {
@@ -244,7 +242,7 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		return nil, errors.Wrap(err, "failed to publish event for created realm")
 	}
 
-	roleNames := append(realmData.AdminRoles, []string{"guest@" + realmData.Name, "services@" + realmData.Name}...)
+	roleNames := append(realmData.AdminRoles, []string{"guest@" + realmData.ID, "services@" + realmData.ID}...)
 	for _, name := range roleNames {
 		if err := p.roles.Set(realmData.ID, document.NewRole(name)); err != nil {
 			return nil, errors.Wrap(err, "failed to save role: "+name)

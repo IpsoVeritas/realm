@@ -62,8 +62,8 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 			}
 			if isAdmin {
 				loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, a.base)
-				loginAction.ID = fmt.Sprintf("%s-admin", realmData.Name)
-				loginAction.UIURI = fmt.Sprintf("%s?realm=%s", viper.GetString("admin_url"), realmData.Name)
+				loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
+				loginAction.UIURI = fmt.Sprintf("%s?realm=%s", viper.GetString("admin_url"), realmData.ID)
 				loginAction.Icon = "https://actions.brickchain.com/booking-webapp/release/icons/information.png"
 				loginAction.Interfaces = []string{
 					"https://interfaces.brickchain.com/v1/realm-admin.json",
@@ -98,7 +98,7 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 		}
 	} else {
 		loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, "")
-		loginAction.ID = fmt.Sprintf("%s-admin", realmData.Name)
+		loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
 		loginAction.Interfaces = []string{
 			"https://interfaces.brickchain.com/v1/realm-admin.json",
 		}
@@ -117,8 +117,8 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 
 		publicRole, err := a.realm.Settings().Get("publicRole")
 		if err == nil && publicRole != "" {
-			joinAction := document.NewActionDescriptor("Join realm", []string{}, 1000, fmt.Sprintf("%s/realm/v2/realms/%s/do/join", a.base, realmData.Name))
-			joinAction.ID = fmt.Sprintf("%s-join", realmData.Name)
+			joinAction := document.NewActionDescriptor("Join realm", []string{}, 1000, fmt.Sprintf("%s/realm/v2/realms/%s/do/join", a.base, realmData.ID))
+			joinAction.ID = fmt.Sprintf("%s-join", realmData.ID)
 			joinAction.Interfaces = []string{
 				"https://interfaces.brickchain.com/v1/public-role.json",
 			}

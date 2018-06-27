@@ -42,13 +42,13 @@ func RealmRoleParse(realmRole string) (role string, realm string) {
 }
 
 func NewMandate(role string) *Mandate {
-	ts := time.Now().UTC()
+	now := time.Now().UTC()
 	return &Mandate{
 		Base: Base{
 			Type:      MandateType,
 			Timestamp: time.Now().UTC(),
 		},
 		Role:      role,
-		ValidFrom: &ts,
+		ValidFrom: &now,
 	}
 }

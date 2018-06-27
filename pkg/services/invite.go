@@ -81,6 +81,11 @@ func (i *InviteService) Send(invite *realm.Invite) (*realm.EmailStatus, error) {
 		return nil, err
 	}
 
+	label := realmData.Label
+	if label == "" {
+		label = realmData.ID
+	}
+
 	message := messaging.Message{
 		Recipient: invite.MessageURI,
 		Templates: messaging.Templates{
@@ -91,7 +96,7 @@ func (i *InviteService) Send(invite *realm.Invite) (*realm.EmailStatus, error) {
 		Data: map[string]interface{}{
 			"role":     invite.Role,
 			"roleName": role.Description,
-			"realm":    realmData.Description,
+			"realm":    label,
 			"url":      u,
 			"text":     invite.Text,
 			"link":     link,

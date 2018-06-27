@@ -8,9 +8,8 @@ import (
 type Realm struct {
 	ID                   string                    `json:"@id,omitempty"`
 	Type                 string                    `json:"@type,omitempty"`
-	Name                 string                    `json:"name,omitempty"`
+	Label                string                    `json:"label,omitempty"`
 	PublicKey            *jose.JsonWebKey          `json:"publicKey,omitempty"`
-	Description          string                    `json:"description,omitempty"`
 	URI                  string                    `json:"uri,omitempty"`
 	GuestMandateTicketID string                    `json:"guestMandateTicketId"`
 	Descriptor           *document.RealmDescriptor `json:"realmDescriptor,omitempty"`
