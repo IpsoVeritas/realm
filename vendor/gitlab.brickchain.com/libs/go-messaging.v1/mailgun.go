@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/Brickchain/go-logger.v1"
 	"github.com/mailgun/mailgun-go"
 	"github.com/spf13/viper"
 )
@@ -49,11 +48,9 @@ func (t *MailgunTransport) Send(m Message) (id string, err error) {
 
 	subjectTemplate := template.Must(template.New("subject").Parse(m.Templates.Subject))
 	subjectTemplate.Execute(&subjectBuffer, m.Data)
-	logger.Debugf("Subject: %s", subjectBuffer.String())
 
 	textTemplate := template.Must(template.New("text").Parse(m.Templates.Text))
 	textTemplate.Execute(&textBuffer, m.Data)
-	logger.Debugf("Text: %s", textBuffer.String())
 
 	u, _ := url.Parse(m.Recipient)
 
@@ -70,7 +67,6 @@ func (t *MailgunTransport) Send(m Message) (id string, err error) {
 		var htmlBuffer bytes.Buffer
 		htmlTemplate := template.Must(template.New("html").Parse(m.Templates.HTML))
 		htmlTemplate.Execute(&htmlBuffer, m.Data)
-		logger.Debugf("HTML: %s", htmlBuffer.String())
 		msg.SetHtml(htmlBuffer.String())
 	}
 

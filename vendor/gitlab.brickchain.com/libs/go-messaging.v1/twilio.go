@@ -3,8 +3,6 @@ package messaging
 import (
 	"net/url"
 
-	"github.com/Brickchain/go-logger.v1"
-
 	"regexp"
 
 	"errors"
@@ -52,7 +50,6 @@ func (t *TwilioTransport) Send(m Message) (id string, err error) {
 	var textBuffer bytes.Buffer
 	textTemplate := template.Must(template.New("text").Parse(m.Templates.Text))
 	textTemplate.Execute(&textBuffer, m.Data)
-	logger.Debugf("Text: %s", textBuffer.String())
 
 	u, _ := url.Parse(m.Recipient)
 

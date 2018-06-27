@@ -9,6 +9,7 @@ import (
 
 	crypto "github.com/Brickchain/go-crypto.v2"
 	document "github.com/Brickchain/go-document.v2"
+	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/pkg/errors"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 	messaging "gitlab.brickchain.com/libs/go-messaging.v1"
@@ -61,6 +62,8 @@ func (i *InviteService) Send(invite *realm.Invite) (*realm.EmailStatus, error) {
 	}
 
 	u := fmt.Sprintf("%s/realm/v2/realms/%s/invites/id/%s/fetch", i.base, i.realmID, invite.ID)
+	logger.Debugf("Invite link: %s", u)
+
 	encoded := url.QueryEscape(u)
 	link := fmt.Sprintf("https://app.plusintegrity.com?data=%s", encoded)
 

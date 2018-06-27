@@ -537,10 +537,10 @@
 			"revisionTime": "2018-01-15T13:04:36Z"
 		},
 		{
-			"checksumSHA1": "qf8QJhBJRDMXBw8qjtSi8+1jqyk=",
+			"checksumSHA1": "cpPf7pxsKN3SekPMvt+0cKc8T6E=",
 			"path": "gitlab.brickchain.com/libs/go-messaging.v1",
-			"revision": "fd763d0dae249a2ed04f5abe01a3471e02fd4379",
-			"revisionTime": "2017-10-06T12:45:58Z"
+			"revision": "39534be6583a7a4247df8d995157ca460401d964",
+			"revisionTime": "2018-06-27T13:17:41Z"
 		},
 		{
 			"checksumSHA1": "F3UXDCkJh2Trdqkl4UJyE2KzKvA=",
