@@ -10,7 +10,7 @@ type Base struct {
 	Type        string    `json:"@type"`
 	Timestamp   time.Time `json:"@timestamp"`
 	ID          string    `json:"@id,omitempty"`
-	Certificate string    `json:"@certificateChain,omitempty"`
+	Certificate string    `json:"@certificate,omitempty"`
 	Realm       string    `json:"@realm,omitempty"`
 	raw         []byte
 }
