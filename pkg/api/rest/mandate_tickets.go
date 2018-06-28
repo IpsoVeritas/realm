@@ -118,17 +118,17 @@ func (c *MandateTicketController) IssueMandateCallback(req httphandler.Request) 
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal multipart"))
 	}
 
+	var certificate *document.Certificate
+
 	if mp.Certificate != "" {
-		verified, _, subject, err := crypto.VerifyDocumentWithCertificateChain(mp, ticket.ScopeRequest.KeyLevel)
+		certificate, err = crypto.VerifyCertificate(mp.Certificate, 10)
 		if err != nil {
-			return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to verify certificate chain"))
+			return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to verify certificate"))
 		}
+	}
 
-		if !verified {
-			return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Could not verify certificate chain"))
-		}
-
-		userKey = subject
+	if certificate != nil {
+		userKey = certificate.Issuer
 	} else {
 		userKey = jws.Signatures[0].Header.JsonWebKey
 	}

@@ -135,7 +135,7 @@ func (p *RealmsServiceProvider) Bootstrap(password string) (*realm.MandateTicket
 	ticket.Mandate.Realm = ticket.Realm
 	ticket.Mandate.RoleName = "Admin"
 
-	ticket.ScopeRequest = document.NewScopeRequest(1000)
+	ticket.ScopeRequest = document.NewScopeRequest(10)
 	ticket.ScopeRequest.Contract = document.NewContract()
 	ticket.ScopeRequest.Contract.Text = fmt.Sprintf("Become bootstrap admin for %s", ticket.Realm)
 	ticket.ScopeRequest.Scopes = []document.Scope{
