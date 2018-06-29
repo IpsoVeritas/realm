@@ -253,10 +253,11 @@ func loadHandler() http.Handler {
 
 		bootContext = contextProvider.Get(bootRealmID)
 
-		pw, err := crypto.GenerateRandomString(10)
+		pw, err := crypto.GenerateRandomString(16)
 		if err != nil {
 			logger.Fatal(err)
 		}
+		pw = strings.Replace(strings.Replace(pw, "-", "", -1), "_", "", -1)
 		bootContext.Settings().Set("password", pw)
 		bootContext.Settings().Set("bootstrapped", "false")
 
@@ -297,7 +298,7 @@ func loadHandler() http.Handler {
 	}
 
 	contextProvider.SetFilestore(files)
-	logger.Infof("Go to %s?realm=%s to manage your Realm", viper.GetString("adminui"), bootRealmID)
+	logger.Infof("Go to %s/#/%s to manage your realm", viper.GetString("adminui"), bootRealmID)
 
 	// Add bootstrap check middleware
 	bootstrapped := false
