@@ -287,6 +287,7 @@ func loadHandler() http.Handler {
 			// temporary code to refresh the descriptor after the name/id change
 			bootRealm, err := bootContext.Realm()
 			if err == nil {
+				bootRealm.Descriptor.ID = bootRealmID
 				bootContext.Set(bootRealm)
 			}
 		}
