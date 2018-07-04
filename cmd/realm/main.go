@@ -283,6 +283,12 @@ func loadHandler() http.Handler {
 			}
 
 			logger.Infof("Bootstrap password: %s", pw)
+		} else {
+			// temporary code to refresh the descriptor after the name/id change
+			bootRealm, err := bootContext.Realm()
+			if err == nil {
+				bootContext.Set(bootRealm)
+			}
 		}
 	}
 
@@ -353,7 +359,8 @@ func loadHandler() http.Handler {
 	mandatesController := rest.NewMandatesController(contextProvider)
 	r.GET("/realm/v2/realms/:realmID/mandates/role/:roleName", wrapper.Wrap(mandatesController.List))
 	r.GET("/realm/v2/realms/:realmID/mandates", wrapper.Wrap(mandatesController.List))
-	r.PUT("/realm/v2/realms/:realmID/mandates/:mandateID/revoke", wrapper.Wrap(mandatesController.Revoke))
+	r.PUT("/realm/v2/realms/:realmID/mandates/id/:mandateID/revoke", wrapper.Wrap(mandatesController.Revoke))
+	r.POST("/realm/v2/realms/:realmID/mandates/issue", wrapper.Wrap(mandatesController.Issue))
 
 	// invites
 	invitesController := rest.NewInvitesController(contextProvider)
