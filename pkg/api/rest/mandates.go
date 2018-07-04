@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"encoding/json"
 	"net/http"
 
+	document "github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/pkg/errors"
@@ -113,4 +115,39 @@ func (c *MandatesController) Revoke(req httphandler.AuthenticatedRequest) httpha
 	}
 
 	return httphandler.NewJsonResponse(http.StatusOK, mandate)
+}
+
+func (c *MandatesController) Issue(req httphandler.AuthenticatedRequest) httphandler.Response {
+	total := stats.StartTimer("api.mandates.Issue.total")
+	defer total.Stop()
+
+	realmID := req.Params().ByName("realmID")
+	if realmID == "" {
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
+	}
+
+	context := c.contextProvider.Get(realmID)
+
+	if !context.HasMandateForRealm(req.Mandates()) {
+		if !c.contextProvider.HasMandateForBootstrapRealm(req.Mandates()) {
+			return httphandler.NewErrorResponse(http.StatusForbidden, errors.New("No access to issue mandates"))
+		}
+	}
+
+	body, err := req.Body()
+	if err != nil {
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to read request body"))
+	}
+
+	mandate := &document.Mandate{}
+	if err := json.Unmarshal(body, &mandate); err != nil {
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to unmarshal mandate json"))
+	}
+
+	issued, err := context.Mandates().Issue(mandate, mandate.Recipient.KeyID)
+	if err != nil {
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not get mandates"))
+	}
+
+	return httphandler.NewJsonResponse(http.StatusCreated, issued)
 }

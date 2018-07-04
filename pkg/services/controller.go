@@ -7,6 +7,7 @@ import (
 
 	"github.com/Brickchain/go-crypto.v2"
 	"github.com/Brickchain/go-document.v2"
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 	resty "gopkg.in/resty.v0"
@@ -43,7 +44,7 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 
 	realmData, err := c.realm.Realm()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get realm data")
 	}
 
 	if len(controller.AdminRoles) < 1 {
@@ -60,18 +61,18 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 
 	role, err := c.realm.Roles().ByName(controller.MandateRole)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed to get role %s", controller.MandateRole)
 	}
 
 	realmKey, err := c.realm.Key()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get realm key")
 	}
 
 	cert, err := crypto.CreateCertificate(realmKey,
 		controller.Descriptor.Key, role.KeyLevel, purposes, 0, "")
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to create certificate")
 	}
 
 	bind.ControllerCertificate = cert
@@ -93,7 +94,7 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 
 	issued, err := c.realm.Mandates().Issue(mandate, fmt.Sprintf("Service: %s", controller.Name))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to issue mandate")
 	}
 
 	bind.Mandates = []string{issued.Signed}
@@ -108,12 +109,12 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 
 	err = c.realm.Controllers().Set(controller)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to save controller")
 	}
 
 	bytes, err := json.Marshal(bind)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to marshal json")
 	}
 
 	return c.realm.Sign(bytes)
