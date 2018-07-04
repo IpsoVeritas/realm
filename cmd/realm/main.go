@@ -208,7 +208,7 @@ func loadHandler() http.Handler {
 		settings,
 		sks, kek[0:32],
 		pubsub,
-		viper.GetString("realmtopic"),
+		viper.GetString("realm_topic"),
 		keyset,
 		email,
 		loadAssets(),

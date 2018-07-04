@@ -238,15 +238,15 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		return nil, errors.Wrap(err, "failed to save realm")
 	}
 
-	if err = p.publishEvent("ADDED", realmData.ID); err != nil {
-		return nil, errors.Wrap(err, "failed to publish event for created realm")
-	}
-
 	roleNames := append(realmData.AdminRoles, []string{"guest@" + realmData.ID, "services@" + realmData.ID}...)
 	for _, name := range roleNames {
 		if err := p.roles.Set(realmData.ID, document.NewRole(name)); err != nil {
 			return nil, errors.Wrap(err, "failed to save role: "+name)
 		}
+	}
+
+	if err = p.publishEvent("ADDED", realmData.ID); err != nil {
+		return nil, errors.Wrap(err, "failed to publish event for created realm")
 	}
 
 	return realmData, nil
