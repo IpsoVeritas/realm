@@ -146,7 +146,7 @@ func (c *MandatesController) Issue(req httphandler.AuthenticatedRequest) httphan
 
 	issued, err := context.Mandates().Issue(mandate, mandate.Recipient.KeyID)
 	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not get mandates"))
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not issue mandate"))
 	}
 
 	return httphandler.NewJsonResponse(http.StatusCreated, issued)
