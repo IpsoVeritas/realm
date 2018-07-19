@@ -206,40 +206,22 @@ func (c *RealmsController) JoinRealm(req httphandler.Request) httphandler.Respon
 
 	context := c.contextProvider.Get(realmID)
 
-	realm, err := context.Realm()
+	body, err := req.Body()
 	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not find realm"))
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to read request body"))
 	}
 
-	if realm.GuestRole == "" {
-		return httphandler.NewErrorResponse(http.StatusForbidden, errors.New("No public invite for realm"))
-	}
-
-	guestRole, err := context.Roles().ByName(realm.GuestRole)
+	jws, err := crypto.UnmarshalSignature(body)
 	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not get guest role"))
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to parse JWS"))
 	}
 
-	scopeRequest := document.NewScopeRequest(guestRole.KeyLevel)
-	scopeRequest.Scopes = []document.Scope{}
-	scopeRequest.ReplyTo = []string{
-		fmt.Sprintf("%s/realm/v2/%s/join", c.base, realmID),
-	}
-
-	scopeRequest.Contract = document.NewContract()
-	scopeRequest.Contract.Text = fmt.Sprintf("Receive mandate for %s", guestRole.Name)
-
-	scopeReqBytes, err := json.Marshal(scopeRequest)
+	multipart, err := context.Join(jws)
 	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to marshal response"))
+		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to join realm"))
 	}
 
-	scopeReqJWS, err := context.Sign(scopeReqBytes)
-	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to sign response"))
-	}
-
-	return httphandler.NewJsonResponse(http.StatusOK, scopeReqJWS.FullSerialize())
+	return httphandler.NewJsonResponse(http.StatusOK, multipart)
 }
 
 func (c *RealmsController) JoinRealmCallback(req httphandler.Request) httphandler.Response {

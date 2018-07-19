@@ -63,7 +63,7 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 			if isAdmin {
 				loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, a.base)
 				loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
-				loginAction.UIURI = fmt.Sprintf("%s?realm=%s", viper.GetString("admin_url"), realmData.ID)
+				loginAction.UIURI = fmt.Sprintf("%s?realm=%s", viper.GetString("adminui"), realmData.ID)
 				loginAction.Icon = "https://actions.brickchain.com/booking-webapp/release/icons/information.png"
 				loginAction.Interfaces = []string{
 					"https://interfaces.brickchain.com/v1/realm-admin.json",
@@ -115,13 +115,19 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 			ActionDescriptor: *loginAction,
 		})
 
-		publicRole, err := a.realm.Settings().Get("publicRole")
-		if err == nil && publicRole != "" {
+		// publicRole, err := a.realm.Settings().Get("publicRole")
+		if realmData.GuestRole != "" {
 			joinAction := document.NewActionDescriptor("Join realm", []string{}, 1000, fmt.Sprintf("%s/realm/v2/realms/%s/do/join", a.base, realmData.ID))
 			joinAction.ID = fmt.Sprintf("%s-join", realmData.ID)
 			joinAction.Interfaces = []string{
 				"https://interfaces.brickchain.com/v1/public-role.json",
 			}
+			// joinAction.Scopes = []document.Scope{
+			// 	document.Scope{
+			// 		Name:     "name",
+			// 		Required: true,
+			// 	},
+			// }
 
 			descriptors = append(descriptors, &realm.ControllerAction{
 				ActionDescriptor: *joinAction,

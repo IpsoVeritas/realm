@@ -60,7 +60,7 @@ func main() {
 	viper.SetDefault("redis", "localhost:6379")
 	viper.SetDefault("filestore_dir", ".files")
 	viper.SetDefault("stats", "none")
-	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/v2/")
+	viper.SetDefault("adminui", "https://larsdev.plusintegrity.com/admin/")
 	viper.SetDefault("proxy_domain", "r.integrity.app")
 	viper.SetDefault("proxy_endpoint", "https://proxy.svc-staging.plusintegrity.com")
 	viper.SetDefault("email_provider", "dummy")
@@ -347,6 +347,9 @@ func loadHandler() http.Handler {
 	r.DELETE("/realm/v2/realms/:realmID", wrapper.Wrap(realmsController.DeleteRealm))
 	r.POST("/realm/v2/realms/:realmID/icon", wrapper.Wrap(realmsController.IconHandler))
 	r.POST("/realm/v2/realms/:realmID/banner", wrapper.Wrap(realmsController.BannerHandler))
+
+	// realm actions
+	r.POST("/realm/v2/realms/:realmID/do/join", wrapper.Wrap(realmsController.JoinRealm))
 
 	// bootstrap realm
 	r.POST("/realm/v2/realms/:realmID/bootstrap", wrapper.Wrap(realmsController.Bootstrap))

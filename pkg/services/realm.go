@@ -1,8 +1,13 @@
 package services
 
 import (
+	"encoding/json"
+	"time"
+
 	"github.com/Brickchain/go-crypto.v2"
+	"github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
+	"github.com/pkg/errors"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 	jose "gopkg.in/square/go-jose.v1"
 )
@@ -215,4 +220,75 @@ func (r *RealmService) Files() *FileService {
 		p:       r.p.filestore,
 		realmID: r.realmID,
 	}
+}
+
+func (r *RealmService) Join(jws *jose.JsonWebSignature) (*document.Multipart, error) {
+
+	var userKey *jose.JsonWebKey
+	var action document.Action
+	var certificate *document.Certificate
+
+	realm, err := r.Realm()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get realm")
+	}
+
+	if realm.GuestRole == "" {
+		return nil, errors.New("No public role set")
+	}
+
+	if len(jws.Signatures) < 1 {
+		return nil, errors.Wrap(err, "no key in signature")
+	}
+
+	actionBytes, err := jws.Verify(jws.Signatures[0].Header.JsonWebKey)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to verify signature")
+	}
+
+	if err := json.Unmarshal(actionBytes, &action); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal scope-request")
+	}
+
+	if action.Certificate != "" {
+		certificate, err = crypto.VerifyCertificate(action.Certificate, 1000)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to verify certificate")
+		}
+	}
+
+	if certificate != nil {
+		userKey = certificate.Issuer
+	} else {
+		userKey = jws.Signatures[0].Header.JsonWebKey
+	}
+
+	role, err := r.Roles().ByName(realm.GuestRole)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not get role")
+	}
+
+	mandate := document.NewMandate(realm.GuestRole)
+	mandate.Realm = r.realmID
+	mandate.RoleName = role.Description
+
+	now := time.Now().UTC()
+	mandate.ValidFrom = &now
+	mandate.Recipient = userKey
+	mandate.Sender = "realm"
+
+	issued, err := r.Mandates().Issue(mandate, crypto.Thumbprint(userKey))
+	if err != nil {
+		return nil, errors.Wrap(err, "could not issue mandate")
+	}
+
+	part := document.Part{
+		Encoding: "application/json+jws",
+		Name:     "mandate",
+		Document: issued.Signed,
+	}
+	multipart := document.NewMultipart()
+	multipart.Append(part)
+
+	return multipart, nil
 }
