@@ -120,16 +120,35 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 	return c.realm.Sign(bytes)
 }
 
-func (c *ControllerService) UpdateActions(controllerID string, actions []*document.ActionDescriptor) error {
+func (c *ControllerService) UpdateActions(controllerID string, mp *document.Multipart) error {
+
+	controller, err := c.Get(controllerID)
+	if err != nil {
+		return errors.Wrap(err, "failed to get controller")
+	}
 
 	list, err := c.realm.Actions().ListForController(controllerID)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "faled to list actions for controller")
 	}
 
-	for _, descriptor := range actions {
+	for _, part := range mp.Parts {
 		updated := false
-		descriptor.Certificate = ""
+		// descriptor.Certificate = ""
+		jws, err := crypto.UnmarshalSignature([]byte(part.Document))
+		if err != nil {
+			return errors.Wrap(err, "failed to unmarshal JWS")
+		}
+
+		payload, err := jws.Verify(controller.Descriptor.Key)
+		if err != nil {
+			return errors.Wrap(err, "failed to verify action signature")
+		}
+
+		descriptor := &document.ActionDescriptor{}
+		if err := json.Unmarshal(payload, &descriptor); err != nil {
+			return errors.Wrap(err, "failed to unmarshal action")
+		}
 
 		for i, action := range list {
 			if action.ID == descriptor.ID {
@@ -137,23 +156,7 @@ func (c *ControllerService) UpdateActions(controllerID string, actions []*docume
 				list = append(list[:i], list[i+1:]...)
 
 				action.ActionDescriptor = *descriptor
-
-				bytes, err := json.Marshal(descriptor)
-				if err != nil {
-					return err
-				}
-
-				signedDesc, err := c.realm.Sign(bytes)
-				if err != nil {
-					return err
-				}
-
-				signedStr, err := signedDesc.CompactSerialize()
-				if err != nil {
-					return err
-				}
-
-				action.Signed = signedStr
+				action.Signed = part.Document
 
 				if err := c.realm.Actions().Set(action); err != nil {
 					return err
@@ -172,22 +175,7 @@ func (c *ControllerService) UpdateActions(controllerID string, actions []*docume
 				ControllerID:     controllerID,
 			}
 
-			bytes, err := json.Marshal(descriptor)
-			if err != nil {
-				return err
-			}
-
-			signedDesc, err := c.realm.Sign(bytes)
-			if err != nil {
-				return err
-			}
-
-			signedStr, err := signedDesc.CompactSerialize()
-			if err != nil {
-				return err
-			}
-
-			action.Signed = signedStr
+			action.Signed = part.Document
 
 			if err := c.realm.Actions().Set(action); err != nil {
 				return err

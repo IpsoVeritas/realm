@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Brickchain/go-crypto.v2"
 	"github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	stats "github.com/Brickchain/go-stats.v1"
@@ -199,32 +198,37 @@ func (c *ControllersController) UpdateActions(req httphandler.AuthenticatedReque
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify controller ID"))
 	}
 
-	controller, err := context.Controllers().Get(controllerID)
-	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not load controller"))
-	}
+	// controller, err := context.Controllers().Get(controllerID)
+	// if err != nil {
+	// 	return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "could not load controller"))
+	// }
 
 	body, err := req.Body()
 	if err != nil {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "could not read request body"))
 	}
 
-	jws, err := crypto.UnmarshalSignature(body)
-	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal JWS"))
+	mp := &document.Multipart{}
+	if err := json.Unmarshal(body, &mp); err != nil {
+		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal multipart"))
 	}
 
-	payload, err := jws.Verify(controller.Descriptor.Key)
-	if err != nil {
-		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "could not verify signature"))
-	}
+	// jws, err := crypto.UnmarshalSignature(body)
+	// if err != nil {
+	// 	return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal JWS"))
+	// }
 
-	var descriptors []*document.ActionDescriptor
-	if err := json.Unmarshal(payload, &descriptors); err != nil {
-		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal document"))
-	}
+	// payload, err := jws.Verify(controller.Descriptor.Key)
+	// if err != nil {
+	// 	return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "could not verify signature"))
+	// }
 
-	if err := context.Controllers().UpdateActions(controllerID, descriptors); err != nil {
+	// var descriptors []*document.ActionDescriptor
+	// if err := json.Unmarshal(payload, &descriptors); err != nil {
+	// 	return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal document"))
+	// }
+
+	if err := context.Controllers().UpdateActions(controllerID, mp); err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to update actions"))
 	}
 
