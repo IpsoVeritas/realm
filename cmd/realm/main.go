@@ -60,7 +60,7 @@ func main() {
 	viper.SetDefault("redis", "localhost:6379")
 	viper.SetDefault("filestore_dir", ".files")
 	viper.SetDefault("stats", "none")
-	viper.SetDefault("adminui", "https://larsdev.plusintegrity.com/admin/")
+	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/master/")
 	viper.SetDefault("proxy_domain", "r.integrity.app")
 	viper.SetDefault("proxy_endpoint", "https://proxy.svc-staging.plusintegrity.com")
 	viper.SetDefault("email_provider", "dummy")
