@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Brickchain/go-document.v2"
+	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
@@ -54,6 +55,8 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 		}
 
 		for _, mandate := range mandates {
+			logger.Debugf("Listing services for role: %s", mandate.Role)
+
 			isAdmin := false
 			for _, adminRole := range realmData.AdminRoles {
 				if adminRole == mandate.Role {
@@ -99,6 +102,7 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 	} else {
 		loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, "")
 		loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
+		loginAction.Internal = true
 		loginAction.Interfaces = []string{
 			"https://interfaces.brickchain.com/v1/realm-admin.json",
 		}
@@ -118,6 +122,7 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 		// publicRole, err := a.realm.Settings().Get("publicRole")
 		if realmData.GuestRole != "" {
 			joinAction := document.NewActionDescriptor("Join realm", []string{}, 1000, fmt.Sprintf("%s/realm/v2/realms/%s/do/join", a.base, realmData.ID))
+			joinAction.Internal = true
 			joinAction.ID = fmt.Sprintf("%s-join", realmData.ID)
 			joinAction.Interfaces = []string{
 				"https://interfaces.brickchain.com/v1/public-role.json",
