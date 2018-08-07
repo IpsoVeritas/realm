@@ -122,6 +122,8 @@ func (r *RealmService) MandatesForRealm(mandates []httphandler.AuthenticatedMand
 		case realmTP:
 			if m.Mandate.Realm == r.realmID {
 				out = append(out, m)
+			} else {
+				logger.Debugf("Mandate realm does not match context: %s != %s", m.Mandate.Realm, r.realmID)
 			}
 		case bootstrapRealmTP:
 			if m.Mandate.Realm == r.p.bootstrapRealm.ID {
