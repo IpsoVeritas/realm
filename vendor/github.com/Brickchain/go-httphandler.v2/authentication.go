@@ -88,10 +88,13 @@ func addOptionalAuthentication(h func(OptionalAuthenticatedRequest) Response) fu
 		mandates := make([]AuthenticatedMandate, 0)
 
 		userKey, token, err := parseMandateToken(req)
-		if err == nil {
-			mandates, _ = parseMandates(token)
-		} else {
-			logger.Error(errors.Wrap(err.(*ErrorResponse).Error(), "failed to parse mandate-token"))
+		if err != nil {
+			return err
+		}
+
+		mandates, err = parseMandates(token)
+		if err != nil {
+			return err
 		}
 
 		r := &authenticatedMandateRequest{
