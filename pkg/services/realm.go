@@ -7,6 +7,7 @@ import (
 	"github.com/Brickchain/go-crypto.v2"
 	"github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
+	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/pkg/errors"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
 	jose "gopkg.in/square/go-jose.v1"
@@ -126,6 +127,8 @@ func (r *RealmService) MandatesForRealm(mandates []httphandler.AuthenticatedMand
 			if m.Mandate.Realm == r.p.bootstrapRealm.ID {
 				out = append(out, m)
 			}
+		default:
+			logger.Debugf("Mandate for role %s not signed by realm key. %s != %s", m.Mandate.Role, signerTP, realmTP)
 		}
 	}
 
