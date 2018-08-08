@@ -66,8 +66,8 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 			if isAdmin {
 				loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, a.base)
 				loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
-				loginAction.UIURI = fmt.Sprintf("%s/#/%s/login", viper.GetString("adminui"), realmData.ID)
-				loginAction.Icon = fmt.Sprintf("%s/assets/img/action_icon.png", viper.GetString("adminui"))
+				loginAction.UIURI = fmt.Sprintf("%s#/%s/login", viper.GetString("adminui"), realmData.ID)
+				loginAction.Icon = fmt.Sprintf("%sassets/img/action_icon.png", viper.GetString("adminui"))
 				loginAction.Interfaces = []string{
 					"https://interfaces.brickchain.com/v1/realm-admin.json",
 				}
