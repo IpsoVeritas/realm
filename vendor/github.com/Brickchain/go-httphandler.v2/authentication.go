@@ -92,9 +92,11 @@ func addOptionalAuthentication(h func(OptionalAuthenticatedRequest) Response) fu
 			return err
 		}
 
-		mandates, err = parseMandates(token)
-		if err != nil {
-			return err
+		if token != nil {
+			mandates, err = parseMandates(token)
+			if err != nil {
+				return err
+			}
 		}
 
 		r := &authenticatedMandateRequest{
@@ -113,6 +115,9 @@ func addOptionalAuthentication(h func(OptionalAuthenticatedRequest) Response) fu
 
 func parseMandateToken(req Request) (*jose.JsonWebKey, *document.MandateToken, Response) {
 	a := req.Header().Get("Authorization")
+	if a == "" {
+		return nil, nil, nil
+	}
 
 	var l = strings.Split(a, " ")
 
