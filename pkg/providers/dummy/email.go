@@ -2,11 +2,15 @@ package dummy
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/mail"
 	"net/url"
+	"path/filepath"
+	"strings"
 
 	logger "github.com/Brickchain/go-logger.v1"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
@@ -59,11 +63,14 @@ func (p *DummyEmailProvider) render(msg messaging.Message) *realm.EmailStatus {
 	logger.Debugf("Text: %s", textBuffer.String())
 	status.Rendered = textBuffer.String()
 
-	status.Attachments = make([]string, 0)
+	status.Attachments = make(map[string]string)
 	for _, f := range msg.Attachments {
 		b, err := ioutil.ReadFile(f)
 		if err == nil {
-			status.Attachments = append(status.Attachments, string(b))
+			key := fmt.Sprintf("cid:%s", filepath.Base(f))
+			base64 := base64.StdEncoding.EncodeToString(b)
+			imageType := strings.Replace(filepath.Ext(f), ".", "/", 1)
+			status.Attachments[key] = fmt.Sprintf("data:image%s;base64,%s", imageType, base64)
 		} else {
 			logger.Warningf("Failed to read attachment %s", f)
 		}

@@ -5,11 +5,11 @@ import (
 )
 
 type EmailStatus struct {
-	MessageID   string   `json:"messageID,omitempty"`
-	Sent        bool     `json:"sent"`
-	Subject     string   `json:"subject,omitempty"`
-	Rendered    string   `json:"rendered,omitempty"`
-	Attachments []string `json:"attachments,omitempty"`
+	MessageID   string            `json:"messageID,omitempty"`
+	Sent        bool              `json:"sent"`
+	Subject     string            `json:"subject,omitempty"`
+	Rendered    string            `json:"rendered,omitempty"`
+	Attachments map[string]string `json:"attachments,omitempty"`
 }
 
 type EmailProvider interface {
