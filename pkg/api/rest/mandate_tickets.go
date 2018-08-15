@@ -135,31 +135,47 @@ func (c *MandateTicketController) IssueMandateCallback(req httphandler.Request) 
 
 	name := userKey.KeyID
 	for _, part := range mp.Parts {
+
 		if part.Name == "name" {
-			partJWS, err := crypto.UnmarshalSignature([]byte(part.Document))
-			if len(partJWS.Signatures) < 1 {
+
+			var fact document.Fact
+			err := json.Unmarshal([]byte(part.Document), &fact)
+			if err != nil {
+				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Failed to unmarshal fact"))
+			}
+
+			fmt.Printf("\n\nFACT => %+v\n\n", fact)
+
+			if len(fact.Signatures) < 1 {
 				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No signatures on fact"))
 			}
 
-			b, err := partJWS.Verify(partJWS.Signatures[0].Header.JsonWebKey)
-			if err != nil {
-				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to verify fact signature"))
-			}
+			for _, sig := range fact.Signatures {
 
-			var fact document.Fact
-			if err := json.Unmarshal(b, &fact); err != nil {
-				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal fact"))
-			}
+				sigJWS, err := crypto.UnmarshalSignature([]byte(sig))
+				if err != nil {
+					return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Failed to unmarshal signature"))
+				}
 
-			if fact.Data == nil {
-				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No data in fact"))
+				b, err := sigJWS.Verify(sigJWS.Signatures[0].Header.JsonWebKey)
+				if err != nil {
+					return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Failed to verify signature"))
+				}
+
+				var factSignature document.Fact
+				err = json.Unmarshal([]byte(b), &factSignature)
+				if err != nil {
+					return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Failed to unmarshal fact signature"))
+				}
+
 			}
 
 			var ok bool
 			name, ok = fact.Data["name"].(string)
 			if !ok {
-				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Fact does not contain name"))
+				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Invalid type"))
 			}
+
 		}
 	}
 

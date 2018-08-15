@@ -16,15 +16,15 @@ type KeyPurpose struct {
 
 type ControllerDescriptor struct {
 	Base
-	Label       string           `json:"label"`
-	ActionsURI  string           `json:"actionsURI"`
-	AdminUI     string           `json:"adminUI,omitempty"`
-	BindURI     string           `json:"bindURI,omitempty"`
-	Key         *jose.JsonWebKey `json:"key,omitempty"`
-	KeyPurposes []KeyPurpose     `json:"keyPurposes,omitempty"`
-	Status      string           `json:"status"`
-	// AddBindingEndpoint string           `json:"addBindingEndpoint,omitempty"`
-	Icon string `json:"icon,omitempty"`
+	Label              string           `json:"label"`
+	ActionsURI         string           `json:"actionsURI"`
+	AdminUI            string           `json:"adminUI,omitempty"`
+	BindURI            string           `json:"bindURI,omitempty"`
+	Key                *jose.JsonWebKey `json:"key,omitempty"`
+	KeyPurposes        []KeyPurpose     `json:"keyPurposes,omitempty"`
+	Status             string           `json:"status"`
+	AddBindingEndpoint string           `json:"addBindingEndpoint,omitempty"`
+	Icon               string           `json:"icon,omitempty"`
 }
 
 func NewControllerDescriptor(label string) *ControllerDescriptor {

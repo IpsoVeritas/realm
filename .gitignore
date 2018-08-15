@@ -4,3 +4,4 @@ cmd/realm/realm
 *.db
 *.yml
 .files
+realm
