@@ -34,6 +34,26 @@ func (c *ControllerService) Set(controller *realm.Controller) error {
 }
 
 func (c *ControllerService) Delete(id string) error {
+	actions, err := c.realm.Actions().ListForController(id)
+	if err != nil {
+		return errors.Wrap(err, "failed to list actions for controller")
+	}
+
+	for _, action := range actions {
+		if err := c.realm.Actions().Delete(action.ID); err != nil {
+			return errors.Wrapf(err, "failed to delete action %s", action.ID)
+		}
+	}
+
+	controller, err := c.Get(id)
+	if err != nil {
+		return errors.Wrap(err, "failed to get controller")
+	}
+
+	if err := c.realm.Mandates().Delete(controller.MandateID); err != nil {
+		return errors.Wrap(err, "failed to delete mandate for controller")
+	}
+
 	return c.p.Delete(c.realmID, id)
 }
 
