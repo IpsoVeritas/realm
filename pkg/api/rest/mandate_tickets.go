@@ -144,8 +144,6 @@ func (c *MandateTicketController) IssueMandateCallback(req httphandler.Request) 
 				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "Failed to unmarshal fact"))
 			}
 
-			fmt.Printf("\n\nFACT => %+v\n\n", fact)
-
 			if len(fact.Signatures) < 1 {
 				return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No signatures on fact"))
 			}
