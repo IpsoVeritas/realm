@@ -50,8 +50,6 @@ func (p *PersistantPubSub) Publish(topic string, data string) error {
 		return err
 	}
 
-	fmt.Println("Inserted: ", msg.ID)
-
 	return p.inmem.Publish(topic, fmt.Sprintf("%v", msg.ID))
 }
 
@@ -139,8 +137,6 @@ func (s *PersistantSubscriber) puller() {
 		s.lock.Unlock()
 		return
 	}
-
-	fmt.Println(len(messages), "unread messages")
 
 	for _, message := range messages {
 		s.results <- message.Data

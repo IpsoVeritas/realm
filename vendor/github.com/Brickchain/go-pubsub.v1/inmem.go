@@ -18,9 +18,17 @@ func NewInmemPubSub() *InmemPubSub {
 	return i
 }
 
+func (i *InmemPubSub) getTopic(topic string) (map[string]chan string, bool) {
+	i.mu.Lock()
+	defer i.mu.Unlock()
+
+	t, ok := i.subscribers[topic]
+	return t, ok
+}
+
 func (i *InmemPubSub) Publish(topic string, data string) error {
 
-	_, ok := i.subscribers[topic]
+	_, ok := i.getTopic(topic)
 	if !ok {
 		return nil // nobody is listening so let's just return...
 	}
@@ -37,13 +45,13 @@ func (i *InmemPubSub) Publish(topic string, data string) error {
 
 func (i *InmemPubSub) Subscribe(group string, topic string) (Subscriber, error) {
 
-	_, ok := i.subscribers[topic]
+	t, ok := i.getTopic(topic)
 	if !ok {
 		i.mu.Lock()
 		i.subscribers[topic] = make(map[string]chan string)
 		i.mu.Unlock()
 	}
-	_, ok = i.subscribers[topic][group]
+	_, ok = t[group]
 	if !ok {
 		i.mu.Lock()
 		i.subscribers[topic][group] = make(chan string, 10000)
@@ -61,7 +69,7 @@ func (i *InmemPubSub) Subscribe(group string, topic string) (Subscriber, error) 
 
 func (i *InmemPubSub) DeleteTopic(topic string) error {
 
-	_, ok := i.subscribers[topic]
+	_, ok := i.getTopic(topic)
 	if ok {
 		delete(i.subscribers, topic)
 	}
@@ -82,14 +90,14 @@ type InmemSubscriber struct {
 
 func (s *InmemSubscriber) Pull(timeout time.Duration) (string, int) {
 
-	_, ok := s.i.subscribers[s.topic]
+	t, ok := s.i.getTopic(s.topic)
 	if ok {
-		_, ok = s.i.subscribers[s.topic][s.group]
+		_, ok = t[s.group]
 		if ok {
 			select {
-			case msg := <-s.i.subscribers[s.topic][s.group]:
+			case msg := <-t[s.group]:
 				return msg, SUCCESS
-			case <-time.After(time.Second * timeout):
+			case <-time.After(timeout):
 				return "", TIMEOUT
 			}
 		}
@@ -99,7 +107,8 @@ func (s *InmemSubscriber) Pull(timeout time.Duration) (string, int) {
 }
 
 func (s *InmemSubscriber) Chan() chan string {
-	return s.i.subscribers[s.topic][s.group]
+	t, _ := s.i.getTopic(s.topic)
+	return t[s.group]
 }
 
 func (s *InmemSubscriber) Stop(timeout time.Duration) {

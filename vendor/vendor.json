@@ -57,6 +57,12 @@
 			"revisionTime": "2018-02-27T00:46:50Z"
 		},
 		{
+			"checksumSHA1": "UnzqL4tMWipAb/ftYx2CiE/xrvc=",
+			"path": "github.com/Brickchain/go-cache.v1",
+			"revision": "837bf9bb1eef5321289df0d36a12729ebc4f5c60",
+			"revisionTime": "2018-08-10T12:40:09Z"
+		},
+		{
 			"checksumSHA1": "qRePSzI4w8WW0enZ44yMraa4Msc=",
 			"path": "github.com/Brickchain/go-crypto.v2",
 			"revision": "e2daa9e6707dc0977028ce13ce493a26f3f350c0",
@@ -81,10 +87,28 @@
 			"revisionTime": "2018-06-27T12:23:20Z"
 		},
 		{
+			"checksumSHA1": "RZfVznCDnnVsCYoTmaemoxB3fbo=",
+			"path": "github.com/Brickchain/go-keys.v1",
+			"revision": "e07793b924ebdcddc0c97876b19ee926eb3d1372",
+			"revisionTime": "2018-06-14T13:09:35Z"
+		},
+		{
+			"checksumSHA1": "MyVXCsRc1qk6MSq0H/ui/P8CpHo=",
+			"path": "github.com/Brickchain/go-keys.v1/gorm",
+			"revision": "e07793b924ebdcddc0c97876b19ee926eb3d1372",
+			"revisionTime": "2018-06-14T13:09:35Z"
+		},
+		{
 			"checksumSHA1": "rbkgfqx1r1pOcAZ+KBKR4DotqRo=",
 			"path": "github.com/Brickchain/go-logger.v1",
 			"revision": "45bd4758c1ecd6d9c958ad8be5394e22baecf816",
 			"revisionTime": "2018-06-21T13:35:29Z"
+		},
+		{
+			"checksumSHA1": "Vw6Fh5g2M1IpjDpXyxNqgByqub0=",
+			"path": "github.com/Brickchain/go-pubsub.v1",
+			"revision": "fdeae7e73e2dc41414a12fbc3589099fd2a9884c",
+			"revisionTime": "2018-08-14T13:21:53Z"
 		},
 		{
 			"checksumSHA1": "Ukn6KmYaWY2yEeVrD4Ci31Ph4V4=",
@@ -507,52 +531,16 @@
 			"revisionTime": "2018-02-19T13:51:26Z"
 		},
 		{
-			"checksumSHA1": "8+JC+kIzY2i++EsiWqtmDyuQkjw=",
-			"path": "gitlab.brickchain.com/controllers/proxy/proxy",
-			"revision": "48ef8f783916dd1105b1740a2621c16abb4c43e6",
-			"revisionTime": "2018-06-12T12:21:38Z"
-		},
-		{
-			"checksumSHA1": "YLov2cEB3eLqrbOHLHO/Gqrc7ag=",
-			"path": "gitlab.brickchain.com/libs/go-cache.v1",
-			"revision": "fc4bc45b8190d2e96e2f0e00ae81d7c599b8bdce",
-			"revisionTime": "2018-02-23T21:31:57Z"
-		},
-		{
 			"checksumSHA1": "O/8ClD9yiAkczLCKz+9kp9OrMRY=",
 			"path": "gitlab.brickchain.com/libs/go-filestore.v1",
 			"revision": "b753b238ac0f31498d946f66885cad160decfb51",
 			"revisionTime": "2018-06-26T12:02:17Z"
 		},
 		{
-			"checksumSHA1": "h3jNDPBp0EuXmjxSxGSVpnK/vWE=",
-			"path": "gitlab.brickchain.com/libs/go-keys.v1",
-			"revision": "f1ebdf32cec3c4349934ed434d100ea3d7f1978a",
-			"revisionTime": "2018-01-15T13:04:36Z"
-		},
-		{
-			"checksumSHA1": "pxXxQZqAtk+SUp3Pxit5qVapjNw=",
-			"path": "gitlab.brickchain.com/libs/go-keys.v1/gorm",
-			"revision": "f1ebdf32cec3c4349934ed434d100ea3d7f1978a",
-			"revisionTime": "2018-01-15T13:04:36Z"
-		},
-		{
 			"checksumSHA1": "cpPf7pxsKN3SekPMvt+0cKc8T6E=",
 			"path": "gitlab.brickchain.com/libs/go-messaging.v1",
 			"revision": "39534be6583a7a4247df8d995157ca460401d964",
 			"revisionTime": "2018-06-27T13:17:41Z"
-		},
-		{
-			"checksumSHA1": "F3UXDCkJh2Trdqkl4UJyE2KzKvA=",
-			"path": "gitlab.brickchain.com/libs/go-pubsub.v1",
-			"revision": "bd0b75e2dc78b69eefc531c7b93bc3cde1078ce5",
-			"revisionTime": "2017-12-01T11:00:48Z"
-		},
-		{
-			"checksumSHA1": "ZJwhoCdRilbcoQu+bawbONt34hA=",
-			"path": "gitlab.brickchain.com/libs/go-stats.v1",
-			"revision": "1da42c7ed952dafce48cd253e6c3d4b2217a4c00",
-			"revisionTime": "2018-03-03T10:30:12Z"
 		},
 		{
 			"checksumSHA1": "b2GnlLiJWJp9i7Iqme22Y5VFtDQ=",

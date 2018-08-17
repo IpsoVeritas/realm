@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 
-	"gitlab.brickchain.com/brickchain/crypto"
+	"github.com/Brickchain/go-crypto.v2"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

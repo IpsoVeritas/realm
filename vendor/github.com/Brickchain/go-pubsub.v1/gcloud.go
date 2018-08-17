@@ -77,11 +77,10 @@ func (g *GCloudPubSub) Publish(topic string, data string) error {
 	res := t.Publish(ctx, &pubsub.Message{
 		Data: []byte(data),
 	})
-	id, err := res.Get(ctx)
-	if err != nil {
+	if _, err := res.Get(ctx); err != nil {
 		return err
 	}
-	logger.Debug("Sent message:", id)
+	// logger.Debug("Sent message:", id)
 
 	return nil
 }
@@ -102,7 +101,7 @@ func (g *GCloudPubSub) ensureTopic(topicName string) (*pubsub.Topic, error) {
 			return nil, err
 		}
 		if !topicExists {
-			logger.Info("New topic:", topicName)
+			// logger.Info("New topic:", topicName)
 			var err error
 			topic, err = g.client.CreateTopic(ctx, topicName)
 			if err != nil {
@@ -166,8 +165,8 @@ func (g *GCloudPubSub) Subscribe(group, topic string) (Subscriber, error) {
 }
 
 func (s *GCloudSubscriber) run() {
-	logger.Info("Starting subscriber for ", s.topic.String())
-	defer logger.Info("Subscriber has stopped")
+	// logger.Info("Starting subscriber for ", s.topic.String())
+	// defer logger.Info("Subscriber has stopped")
 	s.running = true
 	ctx := context.Background()
 	sub := s.g.client.Subscription(s.group)
@@ -191,7 +190,7 @@ func (s *GCloudSubscriber) run() {
 	}
 	go func() {
 		_ = <-s.done
-		logger.Info("got done message.. stopping")
+		// logger.Info("got done message.. stopping")
 		err := sub.Delete(ctx)
 		if err != nil {
 			logger.Error("Failed to delete subscription: ", err)
@@ -202,7 +201,7 @@ func (s *GCloudSubscriber) run() {
 	logger.Debug(sub.String())
 	s.ready <- true
 	err := sub.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
-		logger.Debug("Received msg: ", string(msg.Data))
+		// logger.Debug("Received msg: ", string(msg.Data))
 		s.output <- string(msg.Data)
 		msg.Ack()
 	})
@@ -231,7 +230,7 @@ func (s *GCloudSubscriber) Chan() chan string {
 
 func (s *GCloudSubscriber) Stop(timeout time.Duration) {
 	s.done <- true
-	logger.Debug("Waiting for subscriber to die...")
+	// logger.Debug("Waiting for subscriber to die...")
 	start := time.Now()
 	for {
 		if start.After(start.Add(timeout)) {
@@ -242,5 +241,5 @@ func (s *GCloudSubscriber) Stop(timeout time.Duration) {
 		}
 		time.Sleep(time.Second * 1)
 	}
-	logger.Debug("Subscriber dead!")
+	// logger.Debug("Subscriber dead!")
 }

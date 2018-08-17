@@ -1,18 +1,18 @@
 # PubSub library for Brickchain
 Abstraction layer and helper for PubSub systems  
 The PubSubInterface interface has three methods:
-* ```Publish(topic string, docId string) error```, Publish a message to a topic
+* ```Publish(topic string, data string) error```, Publish a message to a topic
 * ```Subscribe(topic string) (*Subscriber, error)```, Start a subscriber on a topic and return a Subscriber
 * ```DeleteTopic(topic string) error```, Clean up a topic
 
 The Subscriber interface has two methods:
 * ```Pull(timeout time.Duration) (string, int)```, Get a message. The integer returned is 0 for success or 1 for timeout
-* ```Stop()```, Stop the subscriber
+* ```Stop(timeout time.Duration)```, Stop the subscriber
 
-## Publisher
+## Publisher using Google PubSub
 ```go
 import (
-    "gitlab.brickchain.com/brickchain/pubsub"
+    "github.com/Brickchain/go-pubsub.v1"
 )
 
 func Publish(msg string) {
@@ -21,7 +21,7 @@ func Publish(msg string) {
 		panic(err)
 	}
 	
-	err = p.Publish("brickchain/documentType", "documentId")
+	err = p.Publish("some-topic", "some message to publish")
 	if err != nil {
 	    panic(err)
 	}
@@ -29,11 +29,11 @@ func Publish(msg string) {
 
 ```
 
-## Subscriber
+## Subscriber using Google PubSub
 ```go
 import (
     "fmt"
-    "gitlab.brickchain.com/brickchain/pubsub"
+    "github.com/Brickchain/go-pubsub.v1"
 )
 
 func Subscriber() {
@@ -42,7 +42,7 @@ func Subscriber() {
     		panic(err)
     	}
     	
-        sub, err := p.Subscribe("subscriber_group_name", "brickchain/documentType")
+        sub, err := p.Subscribe("subscriber_group_name", "some-topic")
         if err != nil {
             t.Error(err)
         }

@@ -93,8 +93,8 @@ func (r *RedisPubSub) Subscribe(group, topic string) (Subscriber, error) {
 }
 
 func (s *RedisSubscriber) run() {
-	logger.Info("Starting subscriber for ", s.topic)
-	defer logger.Info("Subscriber has stopped")
+	// logger.Info("Starting subscriber for ", s.topic)
+	// defer logger.Info("Subscriber has stopped")
 
 	s.running = true
 	defer func() {
@@ -121,7 +121,7 @@ func (s *RedisSubscriber) run() {
 
 		select {
 		case _ = <-s.done:
-			logger.Debug("Received stop signal")
+			// logger.Debug("Received stop signal")
 			return
 		}
 	}
@@ -131,7 +131,7 @@ func (s *RedisSubscriber) Pull(timeout time.Duration) (string, int) {
 	var msg string
 	select {
 	case msg = <-s.output:
-	case <-time.After(time.Second * timeout):
+	case <-time.After(timeout):
 	}
 	if msg == "" {
 		return "", TIMEOUT
@@ -145,8 +145,8 @@ func (s *RedisSubscriber) Chan() chan string {
 }
 
 func (s *RedisSubscriber) Stop(timeout time.Duration) {
-	s.sub.Close()
-	logger.Debug("Waiting for subscriber to die...")
+	// s.sub.Close()
+	// logger.Debug("Waiting for subscriber to die...")
 	start := time.Now()
 	s.done <- true
 	for {
@@ -158,5 +158,5 @@ func (s *RedisSubscriber) Stop(timeout time.Duration) {
 		}
 		time.Sleep(time.Second * 1)
 	}
-	logger.Debug("Subscriber dead!")
+	// logger.Debug("Subscriber dead!")
 }

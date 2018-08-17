@@ -1,8 +1,8 @@
 package gorm
 
 import (
+	keys "github.com/Brickchain/go-keys.v1"
 	"github.com/jinzhu/gorm"
-	keys "gitlab.brickchain.com/libs/go-keys.v1"
 )
 
 // GormStoredKeyService stores StorredKey objects in a database using the Gorm ORM

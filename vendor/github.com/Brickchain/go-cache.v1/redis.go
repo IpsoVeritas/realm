@@ -4,7 +4,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Brickchain/go-logger.v1"
 	rediscache "gopkg.in/go-redis/cache.v5"
 	redis "gopkg.in/redis.v5"
 	"gopkg.in/vmihailenco/msgpack.v2"
@@ -16,12 +15,10 @@ type RedisCache struct {
 }
 
 func NewRedisCache(servers string) *RedisCache {
-	logger.Info(servers)
 	serverList := make(map[string]string)
 	for i, e := range strings.Split(servers, ",") {
 		serverList[string(i)] = e
 	}
-	logger.Info(serverList)
 
 	ring := redis.NewRing(&redis.RingOptions{
 		Addrs: serverList,

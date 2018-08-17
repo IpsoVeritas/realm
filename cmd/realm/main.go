@@ -14,10 +14,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Brickchain/go-crypto.v2"
+	cache "github.com/Brickchain/go-cache.v1"
+	crypto "github.com/Brickchain/go-crypto.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
+	gormkeys "github.com/Brickchain/go-keys.v1/gorm"
 	logger "github.com/Brickchain/go-logger.v1"
 	proxy "github.com/Brickchain/go-proxy.v1/pkg/client"
+	pubsub "github.com/Brickchain/go-pubsub.v1"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -37,10 +40,7 @@ import (
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/providers/mailgun"
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/services"
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/version"
-	"gitlab.brickchain.com/libs/go-cache.v1"
 	filestore "gitlab.brickchain.com/libs/go-filestore.v1"
-	gormkeys "gitlab.brickchain.com/libs/go-keys.v1/gorm"
-	pubsub "gitlab.brickchain.com/libs/go-pubsub.v1"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

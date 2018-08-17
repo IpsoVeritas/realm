@@ -3,9 +3,9 @@ package gorm
 import (
 	"fmt"
 
+	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/jinzhu/gorm"
 	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	stats "gitlab.brickchain.com/libs/go-stats.v1"
 )
 
 // GormSettingService provider using a database
