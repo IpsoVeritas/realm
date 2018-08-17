@@ -145,6 +145,20 @@ func (i *InviteService) Fetch(inviteID string) (*jose.JsonWebSignature, error) {
 		return nil, errors.Wrap(err, "failed to get invite")
 	}
 
+	realm, err := i.realm.Realm()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get realm")
+	}
+	label := realm.Label
+	if label == "" {
+		label = realm.ID
+	}
+
+	role, err := i.realm.Roles().ByName(invite.Role)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get role")
+	}
+
 	scopeRequest := document.NewScopeRequest(invite.KeyLevel)
 	scopeRequest.ReplyTo = []string{
 		fmt.Sprintf("%s/realm/v2/realms/%s/invites/id/%s/callback", i.base, i.realmID, inviteID),
@@ -152,7 +166,7 @@ func (i *InviteService) Fetch(inviteID string) (*jose.JsonWebSignature, error) {
 	scopeRequest.KeyLevel = invite.KeyLevel
 
 	scopeRequest.Contract = document.NewContract()
-	scopeRequest.Contract.Text = fmt.Sprintf("Receive mandate for %s", invite.Role)
+	scopeRequest.Contract.Text = fmt.Sprintf("Become a member of %s at %s?", role.Description, label)
 
 	scopeReqBytes, err := json.Marshal(scopeRequest)
 	if err != nil {
