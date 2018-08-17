@@ -17,6 +17,7 @@ import (
 	"github.com/Brickchain/go-crypto.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	logger "github.com/Brickchain/go-logger.v1"
+	proxy "github.com/Brickchain/go-proxy.v1/pkg/client"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -34,7 +35,6 @@ import (
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/providers/dummy"
 	gormprvdr "gitlab.brickchain.com/brickchain/realm-ng/pkg/providers/gorm"
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/providers/mailgun"
-	"gitlab.brickchain.com/brickchain/realm-ng/pkg/proxy"
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/services"
 	"gitlab.brickchain.com/brickchain/realm-ng/pkg/version"
 	"gitlab.brickchain.com/libs/go-cache.v1"
@@ -415,11 +415,11 @@ func loadHandler() http.Handler {
 			logger.Fatal(err)
 		}
 
-		p, err := proxy.NewProxy(viper.GetString("proxy_endpoint"))
+		p, err := proxy.NewProxyClient(viper.GetString("proxy_endpoint"))
 		if err != nil {
 			logger.Error(err)
 		} else {
-			if err := p.Register(key); err != nil {
+			if _, err := p.Register(key); err != nil {
 				logger.Error(err)
 			}
 
