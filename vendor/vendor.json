@@ -63,7 +63,7 @@
 			"revisionTime": "2018-08-10T12:40:09Z"
 		},
 		{
-			"checksumSHA1": "qRePSzI4w8WW0enZ44yMraa4Msc=",
+			"checksumSHA1": "6JqK8ZsNMP5nyrMQ6jQJcuJ1w9k=",
 			"path": "github.com/Brickchain/go-crypto.v2",
 			"revision": "e2daa9e6707dc0977028ce13ce493a26f3f350c0",
 			"revisionTime": "2018-05-24T09:40:02Z"
@@ -103,6 +103,18 @@
 			"path": "github.com/Brickchain/go-logger.v1",
 			"revision": "45bd4758c1ecd6d9c958ad8be5394e22baecf816",
 			"revisionTime": "2018-06-21T13:35:29Z"
+		},
+		{
+			"checksumSHA1": "VtpAw2ZkBsB7Bi1vKpW+N0N15f0=",
+			"path": "github.com/Brickchain/go-proxy.v1",
+			"revision": "8594098d6ac9458ce8414a06c2b33c3d92efdd8e",
+			"revisionTime": "2018-08-20T20:00:10Z"
+		},
+		{
+			"checksumSHA1": "XAwrxRxCKcCw+hmXK70eznPaCWE=",
+			"path": "github.com/Brickchain/go-proxy.v1/pkg/client",
+			"revision": "8594098d6ac9458ce8414a06c2b33c3d92efdd8e",
+			"revisionTime": "2018-08-20T20:00:10Z"
 		},
 		{
 			"checksumSHA1": "Vw6Fh5g2M1IpjDpXyxNqgByqub0=",
@@ -397,6 +409,12 @@
 			"path": "github.com/pkg/errors",
 			"revision": "30136e27e2ac8d167177e8a583aa4c3fea5be833",
 			"revisionTime": "2018-01-27T01:58:12Z"
+		},
+		{
+			"checksumSHA1": "JOAO8NYz6Tk/IXZu6P31XX55nBI=",
+			"path": "github.com/posener/wstest",
+			"revision": "28272a7ea048139a5b9c30c1cfb591fbd0481686",
+			"revisionTime": "2018-02-17T13:36:18Z"
 		},
 		{
 			"checksumSHA1": "I87tkF1e/hrl4d/XIKFfkPRq1ww=",

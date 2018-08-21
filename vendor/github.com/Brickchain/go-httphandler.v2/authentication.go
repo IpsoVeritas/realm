@@ -170,6 +170,10 @@ func parseMandateToken(req Request) (*jose.JsonWebKey, *document.MandateToken, R
 func parseMandates(token *document.MandateToken) ([]AuthenticatedMandate, Response) {
 	mandates := make([]AuthenticatedMandate, 0)
 
+	if token == nil {
+		return mandates, nil
+	}
+
 	for _, mandateString := range token.Mandates {
 		mandateJWS, err := crypto.UnmarshalSignature([]byte(mandateString))
 		if err != nil {

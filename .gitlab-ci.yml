@@ -192,3 +192,42 @@ deploy to staging:
 #     DATADOG: "dogstatsd.default:8125"
 #     ADMIN_URL: "https://admin.plusintegrity.com"
 #     REVOCATION: "https://revocation.plusintegrity.com"
+
+deploy to production:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: deploy
+  when: manual
+  only:
+    - master
+  script:
+    - ./tools/deploy_k8s.sh
+  artifacts:
+      paths:
+      - pod.yml
+      - svc.yml
+      - ingress.yml
+      when: always
+  variables:
+    TAG: "$CI_BUILD_REF"
+    GCE_PROJECT: "integrity-prod"
+    REGION: "europe-west1"
+    ZONE: "europe-west1-c"
+    CLUSTER: "prod-1"
+    NAMESPACE: "realm-ng"
+    ENV_NAME: "production"
+    REPLICAS: 3
+    URL: "realm.svc.integrity.app"
+    INGRESS_NAME: "realm-svc-integrity-app"
+    SQL_NAME: "postgres-prod"
+    REDIS: "redis:6379"
+    ALLOWED_ENDPOINTS: "https://realm.svc.integrity.app"
+    DATADOG: "dogstatsd.default:8125"
+    ADMIN_URL: "https://admin.integrity.app"
+    REVOCATION: "https://revocation.svc.integrity.app"
+    FILESTORE: "gcs"
+    GCS_BUCKET: "integrity-realm-ng-prod"
+    GCS_LOCATION: "EU"
+    GCS_PROJECT: "integrity-prod"
+    PUBSUB: "google"
+    PUBSUB_PROJECT_ID: "integrity-prod"
+    REALM_TOPIC: "prod-realms-ng"

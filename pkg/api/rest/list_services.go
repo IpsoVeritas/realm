@@ -32,14 +32,10 @@ func (c *ServicesController) ListServices(req httphandler.OptionalAuthenticatedR
 
 	context := c.contextProvider.Get(realmID)
 
-	req.Log().Debugf("Mandates before filtering: %+v", req.Mandates())
-
 	mandates := make([]*document.Mandate, 0)
 	for _, m := range context.MandatesForRealm(req.Mandates()) {
 		mandates = append(mandates, m.Mandate)
 	}
-
-	req.Log().Debugf("Mandates after filtering: %+v", mandates)
 
 	mp, err := context.Actions().Services(mandates)
 	if err != nil {

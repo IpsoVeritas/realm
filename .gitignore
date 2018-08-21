@@ -2,6 +2,6 @@
 cmd/realm/debug
 cmd/realm/realm
 *.db
-*.yml
 .files
 realm
+*.pem

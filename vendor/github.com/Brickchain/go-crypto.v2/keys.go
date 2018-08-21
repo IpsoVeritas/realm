@@ -4,12 +4,15 @@ import (
 	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/x509"
 	"encoding/base32"
+	"encoding/pem"
 	"strings"
 
 	hash "crypto"
 
-	"gopkg.in/square/go-jose.v1"
+	"github.com/pkg/errors"
+	jose "gopkg.in/square/go-jose.v1"
 )
 
 func NewKey() (*jose.JsonWebKey, error) {
@@ -126,4 +129,48 @@ func Thumbprint(key *jose.JsonWebKey) string {
 	// encoder := *base32.StdEncoding
 	return strings.ToLower(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(keyTPbytes))
 	// return hex.EncodeToString(keyTPbytes)
+}
+
+func MarshalToPEM(key *jose.JsonWebKey) ([]byte, error) {
+
+	var keyBlock pem.Block
+
+	switch x := key.Key.(type) {
+	case *ecdsa.PrivateKey:
+		keyDer, err := x509.MarshalECPrivateKey(x)
+		if err != nil {
+			return nil, err
+		}
+
+		keyBlock = pem.Block{
+			Type:  "EC PRIVATE KEY",
+			Bytes: keyDer,
+		}
+	case *rsa.PrivateKey:
+		keyDer := x509.MarshalPKCS1PrivateKey(x)
+
+		keyBlock = pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: keyDer,
+		}
+	default:
+		return nil, errors.New("Unknown key type")
+	}
+
+	return pem.EncodeToMemory(&keyBlock), nil
+}
+
+func UnmarshalPEM(b []byte) (*jose.JsonWebKey, error) {
+
+	key, err := jose.LoadPrivateKey(b)
+	if err != nil {
+		return nil, err
+	}
+
+	jwk := &jose.JsonWebKey{
+		Key:       key,
+		Algorithm: string(SIGNALG),
+	}
+
+	return jwk, nil
 }

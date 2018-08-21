@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -62,9 +63,10 @@ func main() {
 	viper.SetDefault("stats", "none")
 	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/master/")
 	viper.SetDefault("proxy_domain", "r.integrity.app")
-	viper.SetDefault("proxy_endpoint", "https://proxy.svc-staging.plusintegrity.com")
+	viper.SetDefault("proxy_endpoint", "https://proxy.svc.integrity.app")
 	viper.SetDefault("email_provider", "dummy")
 	viper.SetDefault("mailgun_config", "./dev.yml")
+	viper.SetDefault("key", "./realm.pem")
 
 	if runtime.GOOS == "windows" {
 		logger.SetOutput(colorable.NewColorableStdout())
@@ -196,8 +198,59 @@ func loadHandler() http.Handler {
 		bootRealmID = baseURL.Host
 	}
 
+	var key *jose.JsonWebKey
+	var p *proxy.ProxyClient
+	if bootRealmID == "" {
+		_, err := os.Stat(viper.GetString("key"))
+		if err != nil {
+			key, err = crypto.NewKey()
+			if err != nil {
+				logger.Fatal(err)
+			}
+
+			kb, err := crypto.MarshalToPEM(key)
+			if err != nil {
+				logger.Fatal(err)
+			}
+
+			if err := ioutil.WriteFile(viper.GetString("key"), kb, 0600); err != nil {
+				logger.Fatal(err)
+			}
+		} else {
+			kb, err := ioutil.ReadFile(viper.GetString("key"))
+			if err != nil {
+				logger.Fatal(err)
+			}
+
+			key, err = crypto.UnmarshalPEM(kb)
+			if err != nil {
+				logger.Fatal(err)
+			}
+		}
+
+		p, err = proxy.NewProxyClient(viper.GetString("proxy_endpoint"))
+		if err != nil {
+			logger.Fatal(err)
+		} else {
+			hostname, err := p.Register(key)
+			if err != nil {
+				logger.Fatal(err)
+			}
+
+			logger.Infof("Got hostname: %s", hostname)
+
+			bootRealmID = hostname
+		}
+	}
+
+	base := viper.GetString("base")
+	if base == "" {
+		base = fmt.Sprintf("https://%s", bootRealmID)
+		// contextProvider.SetBase(base)
+	}
+
 	contextProvider := services.NewRealmsServiceProvider(
-		viper.GetString("base"),
+		base,
 		realms,
 		actions,
 		controllers,
@@ -217,7 +270,7 @@ func loadHandler() http.Handler {
 	var bootContext *services.RealmService
 
 	if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
-		if bootRealmID != "" {
+		if p == nil {
 			logger.Infof("Bootstrap realm does not exist, setting up realm %s", bootRealmID)
 			_, err = contextProvider.New(&realm.Realm{
 				ID: bootRealmID,
@@ -226,25 +279,12 @@ func loadHandler() http.Handler {
 				logger.Fatal(err)
 			}
 		} else {
-
-			key, err := crypto.NewKey()
-			if err != nil {
-				logger.Fatal(err)
-			}
-
-			name := fmt.Sprintf("%s.%s", crypto.Thumbprint(key), viper.GetString("proxy_domain"))
-			contextProvider.SetBase(fmt.Sprintf("https://%s", name))
-
-			rd, err := contextProvider.New(&realm.Realm{
-				ID: name,
+			_, err := contextProvider.New(&realm.Realm{
+				ID: bootRealmID,
 			}, key)
 			if err != nil {
 				logger.Fatal(err)
 			}
-
-			bootRealmID = rd.ID
-			settings.Set("", "bootRealmID", bootRealmID)
-			logger.Infof("Created bootstrap realm: %s", bootRealmID)
 		}
 
 		if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
@@ -293,19 +333,13 @@ func loadHandler() http.Handler {
 		}
 	}
 
-	base := viper.GetString("base")
-	if base == "" {
-		base = fmt.Sprintf("https://%s", bootRealmID)
-		contextProvider.SetBase(base)
-	}
-
 	files, err := loadFilestore(base, wrapper, r)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	contextProvider.SetFilestore(files)
-	logger.Infof("Go to %s/#/%s to manage your realm", viper.GetString("adminui"), bootRealmID)
+	logger.Infof("Go to %s#/%s to manage your realm", viper.GetString("adminui"), bootRealmID)
 
 	// Add bootstrap check middleware
 	bootstrapped := false
@@ -409,22 +443,8 @@ func loadHandler() http.Handler {
 
 	handler := httphandler.LoadMiddlewares(r, version.Version)
 
-	if strings.HasSuffix(bootRealmID, viper.GetString("proxy_domain")) {
-		key, err := bootContext.Key()
-		if err != nil {
-			logger.Fatal(err)
-		}
-
-		p, err := proxy.NewProxyClient(viper.GetString("proxy_endpoint"))
-		if err != nil {
-			logger.Error(err)
-		} else {
-			if _, err := p.Register(key); err != nil {
-				logger.Error(err)
-			}
-
-			p.SetHandler(handler)
-		}
+	if p != nil {
+		p.SetHandler(handler)
 	}
 
 	return handler

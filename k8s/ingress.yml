@@ -2,14 +2,12 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: "{{ .INGRESS_NAME }}"
-  labels:
-    stable.k8s.psg.io/kcm.class: "default"
   annotations:
-    kubernetes.io/ingress.allow-http: "false"
-    stable.k8s.psg.io/kcm.enabled: "true"
-    stable.k8s.psg.io/kcm.provider: "googlecloud"
-    stable.k8s.psg.io/kcm.email: "certs@brickchain.com"
     k8s.brickchain.com/dns: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/acme-dns01-provider: "clouddns"
+    certmanager.k8s.io/acme-challenge-type: "dns01"
 spec:
   tls:
   - hosts:
