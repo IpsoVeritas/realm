@@ -65,7 +65,7 @@ func main() {
 	viper.SetDefault("proxy_domain", "r.integrity.app")
 	viper.SetDefault("proxy_endpoint", "https://proxy.svc.integrity.app")
 	viper.SetDefault("email_provider", "dummy")
-	viper.SetDefault("mailgun_config", "./dev.yml")
+	viper.SetDefault("mailgun_config", "./mailgun.yml")
 	viper.SetDefault("key", "./realm.pem")
 
 	if runtime.GOOS == "windows" {

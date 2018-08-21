@@ -68,7 +68,7 @@ spec:
             - name: "EMAIL_PROVIDER"
               value: "mailgun"
             - name: "MAILGUN_CONFIG"
-              value: "/secrets/mailgun/dev.yml"
+              value: "/secrets/mailgun/mailgun.yml"
           ports:
             - containerPort: 6593
           livenessProbe:
