@@ -218,7 +218,7 @@ deploy to production:
     REPLICAS: 3
     URL: "realm.svc.integrity.app"
     INGRESS_NAME: "realm-svc-integrity-app"
-    SQL_NAME: "postgres-prod"
+    SQL_NAME: "postgres-prod-1"
     REDIS: "redis:6379"
     ALLOWED_ENDPOINTS: "https://realm.svc.integrity.app"
     DATADOG: "dogstatsd.default:8125"
