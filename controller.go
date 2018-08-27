@@ -16,6 +16,7 @@ type Controller struct {
 	Tags         []string                       `json:"tags,omitempty"`
 	Priority     int                            `json:"priority,omitempty"`
 	MandateRole  string                         `json:"mandateRole,omitempty"`
+	ServiceID    string                         `json:"serviceID,omitempty"`
 }
 
 type ControllerProvider interface {

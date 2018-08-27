@@ -61,7 +61,7 @@ func main() {
 	viper.SetDefault("redis", "localhost:6379")
 	viper.SetDefault("filestore_dir", ".files")
 	viper.SetDefault("stats", "none")
-	viper.SetDefault("adminui", "https://actions.brickchain.com/realm-admin-ng/master/")
+	viper.SetDefault("adminui", "https://admin.integrity.app")
 	viper.SetDefault("proxy_domain", "r.integrity.app")
 	viper.SetDefault("proxy_endpoint", "https://proxy.svc.integrity.app")
 	viper.SetDefault("email_provider", "dummy")
@@ -200,7 +200,7 @@ func loadHandler() http.Handler {
 
 	var key *jose.JsonWebKey
 	var p *proxy.ProxyClient
-	if bootRealmID == "" {
+	if bootRealmID == "" || viper.GetString("base") == "" {
 		_, err := os.Stat(viper.GetString("key"))
 		if err != nil {
 			key, err = crypto.NewKey()
