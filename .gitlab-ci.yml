@@ -98,7 +98,7 @@ deploy to staging:
   only:
     - master
   script:
-    - /scripts/deploy_k8s.sh -name realm-ng -image $IMAGE -instances 3
+    - /scripts/deploy_k8s.sh -name realm-ng -port 6593 -image $IMAGE -instances 3
   artifacts:
       paths:
       - pod.yml
@@ -133,7 +133,7 @@ deploy to production:
   only:
     - master
   script:
-    - /scripts/deploy_k8s.sh -name realm-ng -image $IMAGE -instances 3
+    - /scripts/deploy_k8s.sh -name realm-ng -port 6593 -image $IMAGE -instances 3
   artifacts:
       paths:
       - pod.yml
