@@ -98,7 +98,7 @@ deploy to staging:
   only:
     - master
   script:
-    - ./tools/deploy_k8s.sh
+    - /scripts/deploy_k8s.sh -name realm-ng -image $IMAGE -instances 3
   artifacts:
       paths:
       - pod.yml
@@ -106,16 +106,12 @@ deploy to staging:
       - ingress.yml
       when: always
   variables:
-    TAG: "$CI_BUILD_REF"
     GCE_PROJECT: "integrity-staging"
     REGION: "europe-west1"
     ZONE: "europe-west1-c"
     CLUSTER: "staging-1"
-    NAMESPACE: "realm-ng"
     ENV_NAME: "staging"
-    REPLICAS: 3
     URL: "realm-ng.svc-staging.plusintegrity.com"
-    INGRESS_NAME: "realm-ng-svc-staging-plusintegrity-com"
     SQL_NAME: "postgres-staging"
     REDIS: "redis:6379"
     ALLOWED_ENDPOINTS: "https://realm-ng.svc-staging.plusintegrity.com https://staging.plusintegrity.com https://staging.integrity.app"
@@ -130,69 +126,6 @@ deploy to staging:
     PUBSUB_PROJECT_ID: "integrity-staging"
     REALM_TOPIC: "staging-realms-ng"
 
-# deploy to production:
-#   image: gcr.io/brickchain-docker/gitlab-builder-deploy
-#   stage: deploy
-#   when: manual
-#   only:
-#     - master
-#   script:
-#     - mkdir ~/.kube; vaultenv download secret/env/gitlab-ci/kubeauth-${GCE_PROJECT}.json ~/.kube/gke.json
-#     - gcloud auth activate-service-account --key-file ~/.kube/gke.json
-#     - gcloud config set container/use_application_default_credentials true
-#     - gcloud config set project ${GCE_PROJECT}
-#     - export GOOGLE_APPLICATION_CREDENTIALS=~/.kube/gke.json
-#     - gcloud container clusters get-credentials --zone ${ZONE} ${CLUSTER}
-
-#     - kubectl create ns ${NAMESPACE} || true
-#     - kubectl -n ${NAMESPACE} get secret gcr-pull || ./tools/gcr_secret.sh
-
-#     - export SQL_CONNECT="${GCE_PROJECT}:${REGION}:${SQL_NAME}=tcp:5432"
-#     - cloud_sql_proxy -dir ./ -projects ${GCE_PROJECT} -instances=${SQL_CONNECT} & sleep 5
-#     - export PGPASSWORD=`vaultenv password secret/env/db/${SQL_NAME}/root`
-#     - export SQL_PASSWORD=`vaultenv password secret/env/db/${SQL_NAME}/realm`
-#     - psql --user postgres --host 127.0.0.1 -c "CREATE DATABASE realm;" || true
-#     - psql --user postgres --host 127.0.0.1 -c "CREATE USER realm WITH PASSWORD '${SQL_PASSWORD}';" || true
-#     - psql --user postgres --host 127.0.0.1 -c "GRANT ALL PRIVILEGES ON DATABASE realm TO realm;"
-
-#     - vaultenv download secret/env/gitlab-ci/kubeauth-${GCE_PROJECT}.json gce.json
-#     - kubectl -n ${NAMESPACE} get secret gce || kubectl -n ${NAMESPACE} create secret generic gce --from-file=gce.json
-
-#     - export KEK=`vaultenv password secret/env/${CLUSTER}/realm/kek`
-#     - kubectl -n ${NAMESPACE} get secret realm-kek || kubectl -n ${NAMESPACE} create secret generic realm-kek --from-literal=KEK=${KEK}
-
-#     - dotenv render -t k8s/pod.yml -o pod.yml
-#     - kubectl -n ${NAMESPACE} apply -f pod.yml
-#     - dotenv render -t k8s/svc.yml -o svc.yml
-#     - kubectl -n ${NAMESPACE} apply -f svc.yml
-#     - dotenv render -t k8s/ingress.yml -o ingress.yml
-#     - kubectl -n ${NAMESPACE} create -f ingress.yml || echo "Ingress already exists"
-#     - pkill cloud_sql_proxy || true
-#   artifacts:
-#       paths:
-#       - pod.yml
-#       - svc.yml
-#       - ingress.yml
-#       when: always
-#   variables:
-#     TAG: "$CI_BUILD_REF"
-#     GCE_PROJECT: "integrity-prod"
-#     REGION: "europe-west1"
-#     ZONE: "europe-west1-c"
-#     CLUSTER: "prod-1"
-#     NAMESPACE: "realm"
-#     REPLICAS: 3
-#     URL: "realm.plusintegrity.com"
-#     INGRESS_NAME: "realm-plusintegrity-com"
-#     SQL_NAME: "postgres-prod-1"
-#     STORAGE_SERVICE: "http://storageservice.storage:6500"
-#     CRYPTOPROVIDER: "gorm"
-#     REDIS: "redis.realm:6379"
-#     ALLOWED_ENDPOINTS: "https://realm.plusintegrity.com https://admin.plusintegrity.com https://plusintegrity.com"
-#     DATADOG: "dogstatsd.default:8125"
-#     ADMIN_URL: "https://admin.plusintegrity.com"
-#     REVOCATION: "https://revocation.plusintegrity.com"
-
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
   stage: deploy
@@ -200,7 +133,7 @@ deploy to production:
   only:
     - master
   script:
-    - ./tools/deploy_k8s.sh
+    - /scripts/deploy_k8s.sh -name realm-ng -image $IMAGE -instances 3
   artifacts:
       paths:
       - pod.yml
@@ -208,16 +141,12 @@ deploy to production:
       - ingress.yml
       when: always
   variables:
-    TAG: "$CI_BUILD_REF"
     GCE_PROJECT: "integrity-prod"
     REGION: "europe-west1"
     ZONE: "europe-west1-c"
     CLUSTER: "prod-1"
-    NAMESPACE: "realm-ng"
     ENV_NAME: "production"
-    REPLICAS: 3
     URL: "realm.svc.integrity.app"
-    INGRESS_NAME: "realm-svc-integrity-app"
     SQL_NAME: "postgres-prod-1"
     REDIS: "redis:6379"
     ALLOWED_ENDPOINTS: "https://realm.svc.integrity.app"
