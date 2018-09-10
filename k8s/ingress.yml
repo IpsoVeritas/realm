@@ -14,20 +14,20 @@ spec:
     - "{{ .URL }}"
     secretName: "tls-{{ .URL }}"
   backend:
-    serviceName: realm-ng
-    servicePort: 6593
+    serviceName: {{ .SERVICE }}
+    servicePort: {{ .PORT }}
   rules:
   - http:
       paths:
       - path: /realm/v2/*
         backend:
-            serviceName: realm-ng
-            servicePort: 6593
+            serviceName: {{ .SERVICE }}
+            servicePort: {{ .PORT }}
       - path: /realm/v2
         backend:
-            serviceName: realm-ng
-            servicePort: 6593
+            serviceName: {{ .SERVICE }}
+            servicePort: {{ .PORT }}
       - path: /.well-known/realm/*
         backend:
-            serviceName: realm-ng
-            servicePort: 6593
+            serviceName: {{ .SERVICE }}
+            servicePort: {{ .PORT }}

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "realm-ng"
+  name: "{{ .SERVICE }}"
   labels:
-    name: realm-ng
+    name: {{ .SERVICE }}
 spec:
   type: NodePort
   selector:
-    name: realmng
+    name: {{ .SERVICE }}
   ports:
-    - port: 6593
+    - port: {{ .PORT }}
       name: api
