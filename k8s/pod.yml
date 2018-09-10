@@ -34,7 +34,7 @@ spec:
             - name: "GORM_DIALECT"
               value: "postgres"
             - name: "GORM_OPTIONS"
-              value: "host=127.0.0.1 user={{ .SERVICE }} password={{ .SQL_PASSWORD }} dbname={{ .SERVICE }} sslmode=disable port=5432"
+              value: "host=127.0.0.1 user={{ .DBNAME }} password={{ .SQL_PASSWORD }} dbname={{ .DBNAME }} sslmode=disable port=5432"
             - name: "STATS"
               value: "datadog"
             - name: "DOGSTATSD"
