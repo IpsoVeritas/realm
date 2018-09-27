@@ -75,10 +75,10 @@
 			"revisionTime": "2018-08-14T07:58:06Z"
 		},
 		{
-			"checksumSHA1": "5/rSePTq5wNXDvAVRGmMUwda+qU=",
+			"checksumSHA1": "eGsMSmjraJiT2W70geTlm/pYPwI=",
 			"path": "github.com/Brickchain/go-httphandler.v2",
-			"revision": "99f0dbaf604c2b1cba0bdd2e9d84847dfa82aebb",
-			"revisionTime": "2018-06-27T12:23:20Z"
+			"revision": "de7d59aef3003d32f97e939641e09c8c3e53814f",
+			"revisionTime": "2018-09-17T09:22:53Z"
 		},
 		{
 			"checksumSHA1": "Sy3yfHnf020k39X0QK4Y69LVCi0=",
@@ -99,10 +99,10 @@
 			"revisionTime": "2018-06-14T13:09:35Z"
 		},
 		{
-			"checksumSHA1": "rbkgfqx1r1pOcAZ+KBKR4DotqRo=",
+			"checksumSHA1": "/n4BMAlQQvNT3JdpYrrLlIz1Tts=",
 			"path": "github.com/Brickchain/go-logger.v1",
-			"revision": "45bd4758c1ecd6d9c958ad8be5394e22baecf816",
-			"revisionTime": "2018-06-21T13:35:29Z"
+			"revision": "b76d97958f28db76742f045a80f2cf7b909c7e37",
+			"revisionTime": "2018-09-12T10:07:10Z"
 		},
 		{
 			"checksumSHA1": "VtpAw2ZkBsB7Bi1vKpW+N0N15f0=",
@@ -483,10 +483,10 @@
 			"revisionTime": "2018-01-03T17:44:51Z"
 		},
 		{
-			"checksumSHA1": "9y/iQh3/YtX31wAu7eJravtjTro=",
+			"checksumSHA1": "mVse81rphxcTRDHBRG1fZnfwJ8w=",
 			"path": "github.com/sirupsen/logrus",
-			"revision": "8c0189d9f6bbf301e5d055d34268156b317016af",
-			"revisionTime": "2018-02-13T14:31:10Z"
+			"revision": "f3df9aeffda7c12bd9f5a03f9251d75d35993165",
+			"revisionTime": "2018-09-08T09:18:16Z"
 		},
 		{
 			"checksumSHA1": "lBehULzb2/kIK3wZ0gz2yNmHq9s=",
