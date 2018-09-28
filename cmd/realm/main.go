@@ -397,6 +397,7 @@ func loadHandler() http.Handler {
 	mandatesController := rest.NewMandatesController(contextProvider)
 	r.GET("/realm/v2/realms/:realmID/mandates/role/:roleName", wrapper.Wrap(mandatesController.List))
 	r.GET("/realm/v2/realms/:realmID/mandates", wrapper.Wrap(mandatesController.List))
+	r.GET("/realm/v2/realms/:realmID/mandate/:mandateID", wrapper.Wrap(mandatesController.Get))
 	r.PUT("/realm/v2/realms/:realmID/mandates/id/:mandateID/revoke", wrapper.Wrap(mandatesController.Revoke))
 	r.POST("/realm/v2/realms/:realmID/mandates/issue", wrapper.Wrap(mandatesController.Issue))
 
