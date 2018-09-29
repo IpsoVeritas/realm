@@ -68,7 +68,7 @@ func main() {
 	viper.SetDefault("mailgun_config", "./mailgun.yml")
 	viper.SetDefault("key", "./realm.pem")
 
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == "windows" && viper.GetString("log_formatter") == "text" {
 		logger.SetOutput(colorable.NewColorableStdout())
 		logger.SetLogrusFormatter(&logrus.TextFormatter{ForceColors: true})
 	} else {

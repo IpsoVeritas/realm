@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/Brickchain/go-document.v2"
 	logger "github.com/Brickchain/go-logger.v1"
@@ -64,10 +65,24 @@ func (a *ActionService) Services(mandates []*document.Mandate) (*document.Multip
 				}
 			}
 			if isAdmin {
+
+				adminuiURL, err := url.Parse(viper.GetString("adminui"))
+				if err != nil {
+					return nil, errors.Wrap(err, "malformed admin UI URL")
+				}
+				iconURL, err := adminuiURL.Parse("assets/img/action_icon.png")
+				if err != nil {
+					return nil, errors.Wrap(err, "malformed icon path")
+				}
+				uiURL, err := adminuiURL.Parse(fmt.Sprintf("#/%s/login", realmData.ID))
+				if err != nil {
+					return nil, errors.Wrap(err, "malformed ui path")
+				}
+
 				loginAction := document.NewActionDescriptor("Manage your service place", realmData.AdminRoles, 1000, a.base)
 				loginAction.ID = fmt.Sprintf("%s-admin", realmData.ID)
-				loginAction.UIURI = fmt.Sprintf("%s#/%s/login", viper.GetString("adminui"), realmData.ID)
-				loginAction.Icon = fmt.Sprintf("%sassets/img/action_icon.png", viper.GetString("adminui"))
+				loginAction.UIURI = uiURL.String()
+				loginAction.Icon = iconURL.String()
 				loginAction.Interfaces = []string{
 					"https://interfaces.brickchain.com/v1/realm-admin.json",
 				}
