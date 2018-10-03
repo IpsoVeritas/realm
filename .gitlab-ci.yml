@@ -125,9 +125,9 @@ deploy to staging:
     PUBSUB: "google"
     PUBSUB_PROJECT_ID: "integrity-staging"
     REALM_TOPIC: "staging-realms-ng"
-#  environment:
-#    name: staging
-#    url: https://realm-ng.svc-staging.plusintegrity.com/
+  environment:
+    name: staging
+    url: https://realm-ng.svc-staging.plusintegrity.com/
 
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -163,6 +163,6 @@ deploy to production:
     PUBSUB: "google"
     PUBSUB_PROJECT_ID: "integrity-prod"
     REALM_TOPIC: "prod-realms-ng"
-#  environment:
-#    name: production
-#    url: https://realm.svc.integrity.app/
+  environment:
+    name: production
+    url: https://realm.svc.integrity.app/
