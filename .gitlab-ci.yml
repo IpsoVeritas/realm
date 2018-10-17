@@ -22,43 +22,45 @@ test:
     - go generate cmd/realm/main.go
     - go test -v -cover $(go list ./... | grep -v /vendor/)
 
-build:
-  image: gcr.io/brickchain-docker/gitlab-builder-go:1.10
+build linux:
+  image: gcr.io/brickchain-docker/gitlab-builder-go:1.11
   stage: build
+  only:
+    - master
   script:
     - go generate pkg/version/version.go
     - go generate cmd/realm/main.go
     - GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-amd64 cmd/realm/main.go
-    # - GOOS=linux GOARCH=386 CGO_ENABLED=1 go build -ldflags '-extldflags "-static"' -o realm-linux-386
   artifacts:
     paths:
     - realm-linux-*
 
-# build-darwin:
-#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-darwin:1.10
-#   stage: build
-#   script:
-#     - go generate constant/version.go
-#     - go generate
-#     - CC=o64-clang CXX=o64-clang++ GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -o realm-darwin-amd64
-#     - CC=o32-clang CXX=o32-clang++ GOOS=darwin GOARCH=386 CGO_ENABLED=1 go build -o realm-darwin-386
-#   artifacts:
-#     paths:
-#     - realm-darwin-*
+build darwin:
+  image: gcr.io/brickchain-docker/gitlab-builder-gocross-darwin:1.11
+  stage: build
+  only:
+    - master
+  script:
+    - go generate pkg/version/version.go
+    - go generate cmd/realm/main.go
+    - CC=o64-clang CXX=o64-clang++ GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -o realm-darwin-amd64 cmd/realm/main.go
+  artifacts:
+    paths:
+    - realm-darwin-*
 
-# build-arm:
-#   image: gcr.io/brickchain-docker/gitlab-builder-gocross-arm:1.10
-#   stage: build
-#   script:
-#     - go generate constant/version.go
-#     - go generate
-#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=5 CGO_ENABLED=1 CGO_CFLAGS="-march=armv5 -fPIC" CGO_CXXFLAGS="-march=armv5 -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv5
-#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=6 CGO_ENABLED=1 CGO_CFLAGS="-march=armv6 -fPIC" CGO_CXXFLAGS="-march=armv6 -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv6
-#     - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CGO_CFLAGS="-march=armv7-a -fPIC" CGO_CXXFLAGS="-march=armv7-a -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv7
-#     - CC=aarch64-linux-gnu-gcc-5 CXX=aarch64-linux-gnu-g++-5 GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-arm64
-#   artifacts:
-#     paths:
-#     - realm-linux-arm*
+build arm:
+  image: gcr.io/brickchain-docker/gitlab-builder-gocross-arm:1.11
+  stage: build
+  only:
+    - master
+  script:
+    - go generate pkg/version/version.go
+    - go generate cmd/realm/main.go
+    - CC=arm-linux-gnueabihf-gcc-5 CXX=arm-linux-gnueabihf-g++-5 GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CGO_CFLAGS="-march=armv7-a -fPIC" CGO_CXXFLAGS="-march=armv7-a -fPIC" go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-armv7 cmd/realm/main.go
+    - CC=aarch64-linux-gnu-gcc-5 CXX=aarch64-linux-gnu-g++-5 GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-linux-arm64 cmd/realm/main.go
+  artifacts:
+    paths:
+    - realm-linux-arm*
 
 docker:
   stage: docker
@@ -75,22 +77,18 @@ docker:
   services:
     - gcr.io/brickchain-docker/gitlab-builder-docker
 
-# upload to aws:
-#   image: gcr.io/brickchain-docker/gitlab-builder-deploy
-#   stage: deploy
-#   only:
-#     - master
-#   script:
-#     - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
-#     - aws s3 cp realm-version.txt s3://brickchain-artifacts/
-#     - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/
-#     - aws s3 cp realm-darwin-386 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-386 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-armv5 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-armv6 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/
-#     - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/
+upload to aws:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: deploy
+  only:
+    - master
+  script:
+    - VERSION=`git describe --always --abbrev=0`
+    - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
+    - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/realm-${VERSION}-darwin-amd64
+    - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/realm-${VERSION}-linux-amd64
+    - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/realm-${VERSION}-linux-amd64
+    - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/realm-${VERSION}-darwin-amd64
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
