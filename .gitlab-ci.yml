@@ -85,10 +85,12 @@ upload to aws:
   script:
     - VERSION=`git describe --always --abbrev=0`
     - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
-    - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/realm-${VERSION}-darwin-amd64
-    - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/realm-${VERSION}-linux-amd64
-    - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/realm-${VERSION}-linux-amd64
-    - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/realm-${VERSION}-darwin-amd64
+    - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/realm-$VERSION-darwin-amd64
+    - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/realm-$VERSION-linux-amd64
+    - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/realm-$VERSION-linux-amd64
+    - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/realm-$VERSION-darwin-amd64
+    - aws configure set preview.cloudfront true
+    - aws cloudfront create-invalidation --distribution-id E2X3E9ES6IU0SR --paths "/realm-$VERSION-*"
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
