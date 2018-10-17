@@ -18,6 +18,8 @@ stages:
 test:
   image: gcr.io/brickchain-docker/gitlab-builder-go:1.10
   stage: test
+  except:
+    - tags
   script:
     - go generate cmd/realm/main.go
     - go test -v -cover $(go list ./... | grep -v /vendor/)
