@@ -89,8 +89,8 @@ upload to aws:
     - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
     - aws s3 cp realm-darwin-amd64 s3://brickchain-artifacts/realm-$VERSION-darwin-amd64
     - aws s3 cp realm-linux-amd64 s3://brickchain-artifacts/realm-$VERSION-linux-amd64
-    - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/realm-$VERSION-linux-amd64
-    - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/realm-$VERSION-darwin-amd64
+    - aws s3 cp realm-linux-armv7 s3://brickchain-artifacts/realm-$VERSION-linux-armv7
+    - aws s3 cp realm-linux-arm64 s3://brickchain-artifacts/realm-$VERSION-darwin-arm64
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2X3E9ES6IU0SR --paths "/realm-$VERSION-*"
 
