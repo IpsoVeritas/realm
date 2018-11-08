@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/spf13/viper"
+
 	"github.com/Brickchain/go-crypto.v2"
 	"github.com/Brickchain/go-document.v2"
 	"github.com/pkg/errors"
@@ -140,7 +142,7 @@ func (c *ControllerService) Bind(controller *realm.Controller) (*jose.JsonWebSig
 	return c.realm.Sign(bytes)
 }
 
-func (c *ControllerService) UpdateActions(controllerID string, mp *document.Multipart) error {
+func (c *ControllerService) UpdateActions(controllerID string, mp *document.Multipart, adminKey *jose.JsonWebKey) error {
 
 	controller, err := c.Get(controllerID)
 	if err != nil {
@@ -162,7 +164,28 @@ func (c *ControllerService) UpdateActions(controllerID string, mp *document.Mult
 
 		payload, err := jws.Verify(controller.Descriptor.Key)
 		if err != nil {
-			return errors.Wrap(err, "failed to verify action signature")
+			if viper.GetBool("allow_patching") {
+				payload, err = jws.Verify(jws.Signatures[0].Header.JsonWebKey)
+				if err != nil {
+					return errors.Wrap(err, "failed to verify action signature")
+				}
+				document := &document.ActionDescriptor{}
+				if err := json.Unmarshal(payload, &document); err != nil {
+					return errors.Wrap(err, "failed to unmarshal document")
+				}
+				valid, signers, subject, err := crypto.VerifyDocumentWithCertificateChain(document, 11)
+				if !valid || err != nil {
+					return errors.Wrap(err, "failed to verify action certificate")
+				}
+				if crypto.Thumbprint(adminKey) != crypto.Thumbprint(signers[0]) {
+					return errors.New("Invalid root key in action certificate")
+				}
+				if crypto.Thumbprint(jws.Signatures[0].Header.JsonWebKey) != crypto.Thumbprint(subject) {
+					return errors.New("Invalid subject key in action certificate")
+				}
+			} else {
+				return errors.Wrap(err, "failed to verify action signature")
+			}
 		}
 
 		descriptor := &document.ActionDescriptor{}

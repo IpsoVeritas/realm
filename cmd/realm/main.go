@@ -67,6 +67,7 @@ func main() {
 	viper.SetDefault("email_provider", "dummy")
 	viper.SetDefault("mailgun_config", "./mailgun.yml")
 	viper.SetDefault("key", "./realm.pem")
+	viper.SetDefault("allow_patching", false)
 
 	if runtime.GOOS == "windows" && viper.GetString("log_formatter") == "text" {
 		logger.SetOutput(colorable.NewColorableStdout())

@@ -228,7 +228,7 @@ func (c *ControllersController) UpdateActions(req httphandler.AuthenticatedReque
 	// 	return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "failed to unmarshal document"))
 	// }
 
-	if err := context.Controllers().UpdateActions(controllerID, mp); err != nil {
+	if err := context.Controllers().UpdateActions(controllerID, mp, req.Key()); err != nil {
 		return httphandler.NewErrorResponse(http.StatusInternalServerError, errors.Wrap(err, "failed to update actions"))
 	}
 
