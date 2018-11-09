@@ -28,6 +28,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 	colorable "github.com/mattn/go-colorable"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -46,7 +47,7 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load(".env")
+	loadEnv()
 	viper.AutomaticEnv()
 	viper.SetDefault("log_formatter", "text")
 	viper.SetDefault("log_level", "debug")
@@ -103,6 +104,23 @@ func main() {
 var w *io.PipeWriter
 var db *gorm.DB
 var cacheStore cache.Cache
+
+func loadEnv() {
+	home, err := homedir.Dir()
+	if err == nil {
+		path := fmt.Sprintf("%s%s.config%sbrickchain/realm.env", home, string(os.PathSeparator), string(os.PathSeparator))
+		if err = godotenv.Load(path); err == nil {
+			logger.Infof("ENV variables loaded from  %s", path)
+		}
+	}
+	current, err := os.Getwd()
+	if err == nil {
+		path := fmt.Sprintf("%s%s.env", current, string(os.PathSeparator))
+		if err = godotenv.Load(path); err == nil {
+			logger.Infof("ENV variables loaded from  %s", path)
+		}
+	}
+}
 
 func loadHandler() http.Handler {
 
