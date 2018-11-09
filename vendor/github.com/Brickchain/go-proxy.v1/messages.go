@@ -51,6 +51,7 @@ func NewHttpResponse(id string, status int) *HttpResponse {
 type RegistrationRequest struct {
 	document.Base
 	MandateToken string `json:"mandateToken"`
+	Session      string `json:"session,omitempty"`
 }
 
 func NewRegistrationRequest(mandateToken string) *RegistrationRequest {
@@ -156,6 +157,20 @@ func NewWSTeardown(id string) *WSTeardown {
 		Base: document.Base{
 			ID:        id,
 			Type:      SchemaBase + "/ws-teardown.json",
+			Timestamp: time.Now().UTC(),
+		},
+	}
+}
+
+type Disconnect struct {
+	document.Base
+}
+
+func NewDisconnect() *Disconnect {
+	return &Disconnect{
+		Base: document.Base{
+			ID:        uuid.Must(uuid.NewV4()).String(),
+			Type:      SchemaBase + "/disconnect.json",
 			Timestamp: time.Now().UTC(),
 		},
 	}
