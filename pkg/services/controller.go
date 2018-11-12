@@ -183,6 +183,20 @@ func (c *ControllerService) UpdateActions(controllerID string, mp *document.Mult
 				if crypto.Thumbprint(jws.Signatures[0].Header.JsonWebKey) != crypto.Thumbprint(subject) {
 					return errors.New("Invalid subject key in action certificate")
 				}
+				document.Certificate = ""
+				payload, err := json.Marshal(document)
+				if err != nil {
+					return errors.Wrap(err, "failed to marshal document")
+				}
+				jws, err := c.realm.Sign(payload)
+				if err != nil {
+					return errors.Wrap(err, "failed to sign document")
+				}
+				compact, err := jws.CompactSerialize()
+				if err != nil {
+					return errors.Wrap(err, "failed to serialize jws")
+				}
+				part.Document = compact
 			} else {
 				return errors.Wrap(err, "failed to verify action signature")
 			}
