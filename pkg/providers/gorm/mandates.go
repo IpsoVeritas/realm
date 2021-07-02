@@ -6,7 +6,7 @@ import (
 	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 // GormMandateService provider using a database

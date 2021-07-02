@@ -5,7 +5,7 @@ import (
 
 	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/jinzhu/gorm"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 // GormSettingService provider using a database

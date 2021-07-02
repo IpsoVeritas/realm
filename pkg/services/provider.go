@@ -10,10 +10,10 @@ import (
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	keys "github.com/Brickchain/go-keys.v1"
 	pubsub "github.com/Brickchain/go-pubsub.v1"
+	realm "github.com/Brickchain/realm"
+	filestore "github.com/Brickchain/realm/pkg/providers/filestore"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	filestore "gitlab.brickchain.com/libs/go-filestore.v1"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

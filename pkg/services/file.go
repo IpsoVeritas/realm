@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	filestore "gitlab.brickchain.com/libs/go-filestore.v1"
+	filestore "github.com/Brickchain/realm/pkg/providers/filestore"
 )
 
 type FileService struct {

@@ -1,8 +1,8 @@
 package rest
 
 import (
+	"github.com/Brickchain/go-crypto.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
-	"gitlab.brickchain.com/brickchain/crypto"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

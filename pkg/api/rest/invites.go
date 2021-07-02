@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Brickchain/go-crypto.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/pkg/errors"
-	"gitlab.brickchain.com/brickchain/crypto"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	"gitlab.brickchain.com/brickchain/realm-ng/pkg/services"
+	realm "github.com/Brickchain/realm"
+	"github.com/Brickchain/realm/pkg/services"
 )
 
 type InvitesController struct {

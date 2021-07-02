@@ -5,7 +5,7 @@ import (
 	"path"
 
 	httphandler "github.com/Brickchain/go-httphandler.v2"
-	"gitlab.brickchain.com/brickchain/realm-ng/pkg/version"
+	"github.com/Brickchain/realm/pkg/version"
 
 	"net/http"
 )

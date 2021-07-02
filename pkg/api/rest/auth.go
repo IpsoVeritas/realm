@@ -3,7 +3,7 @@ package rest
 import (
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	"github.com/pkg/errors"
-	"gitlab.brickchain.com/brickchain/realm-ng/pkg/services"
+	"github.com/Brickchain/realm/pkg/services"
 
 	"net/http"
 )

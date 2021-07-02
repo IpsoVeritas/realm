@@ -1,6 +1,6 @@
 package services
 
-import realm "gitlab.brickchain.com/brickchain/realm-ng"
+import realm "github.com/Brickchain/realm"
 
 type SettingService struct {
 	p       realm.SettingProvider

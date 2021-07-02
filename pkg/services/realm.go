@@ -9,7 +9,7 @@ import (
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/pkg/errors"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

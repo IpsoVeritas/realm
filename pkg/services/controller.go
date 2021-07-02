@@ -11,8 +11,8 @@ import (
 	"github.com/Brickchain/go-document.v2"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	resty "gopkg.in/resty.v0"
+	realm "github.com/Brickchain/realm"
+	resty "gopkg.in/resty.v1"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

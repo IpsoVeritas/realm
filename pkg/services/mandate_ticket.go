@@ -2,7 +2,7 @@ package services
 
 import (
 	uuid "github.com/satori/go.uuid"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 type MandateTicketService struct {

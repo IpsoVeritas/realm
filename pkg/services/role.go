@@ -2,7 +2,7 @@ package services
 
 import (
 	document "github.com/Brickchain/go-document.v2"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 type RoleService struct {

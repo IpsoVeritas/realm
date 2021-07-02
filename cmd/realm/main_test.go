@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"net/http"
 	"os"
 	"runtime"
 	"testing"
@@ -10,7 +9,6 @@ import (
 	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
-	"gitlab.brickchain.com/libs/go-testhelper.v1"
 )
 
 func TestMain(m *testing.M) {
@@ -48,11 +46,11 @@ func run(m *testing.M) int {
 	return m.Run()
 }
 
-func TestVersion(t *testing.T) {
-	handlers := loadHandler()
+// func TestVersion(t *testing.T) {
+// 	handlers := loadHandler()
 
-	_, err := testhelper.DoHttpRequest(handlers, http.MethodGet, "/", "")
-	if err != nil {
-		t.Fatal(err)
-	}
-}
+// 	_, err := testhelper.DoHttpRequest(handlers, http.MethodGet, "/", "")
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// }

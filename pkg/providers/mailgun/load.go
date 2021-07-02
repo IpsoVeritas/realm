@@ -3,9 +3,9 @@ package mailgun
 import (
 	"errors"
 
+	realm "github.com/Brickchain/realm"
+	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
 	"github.com/spf13/viper"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	messaging "gitlab.brickchain.com/libs/go-messaging.v1"
 )
 
 type MailgunProvider struct {

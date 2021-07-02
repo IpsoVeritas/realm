@@ -1,7 +1,7 @@
 package realm
 
 import (
-	messaging "gitlab.brickchain.com/libs/go-messaging.v1"
+	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
 )
 
 type EmailStatus struct {

@@ -8,8 +8,8 @@ import (
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	stats "github.com/Brickchain/go-stats.v1"
 	"github.com/pkg/errors"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	"gitlab.brickchain.com/brickchain/realm-ng/pkg/services"
+	realm "github.com/Brickchain/realm"
+	"github.com/Brickchain/realm/pkg/services"
 )
 
 type ControllersController struct {

@@ -8,7 +8,7 @@ import (
 	crypto "github.com/Brickchain/go-crypto.v2"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 type MandateService struct {

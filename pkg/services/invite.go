@@ -10,9 +10,9 @@ import (
 	crypto "github.com/Brickchain/go-crypto.v2"
 	document "github.com/Brickchain/go-document.v2"
 	logger "github.com/Brickchain/go-logger.v1"
+	realm "github.com/Brickchain/realm"
+	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
 	"github.com/pkg/errors"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	messaging "gitlab.brickchain.com/libs/go-messaging.v1"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

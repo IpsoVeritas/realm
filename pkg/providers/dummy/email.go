@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	logger "github.com/Brickchain/go-logger.v1"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
-	messaging "gitlab.brickchain.com/libs/go-messaging.v1"
+	realm "github.com/Brickchain/realm"
+	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
 )
 
 type DummyEmailProvider struct{}

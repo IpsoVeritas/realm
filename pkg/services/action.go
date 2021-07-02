@@ -9,7 +9,7 @@ import (
 	logger "github.com/Brickchain/go-logger.v1"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 type ActionService struct {

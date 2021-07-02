@@ -5,7 +5,7 @@ import (
 
 	document "github.com/Brickchain/go-document.v2"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 func TestRoleService_Get(t *testing.T) {

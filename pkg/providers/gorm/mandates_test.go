@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	realm "gitlab.brickchain.com/brickchain/realm-ng"
+	realm "github.com/Brickchain/realm"
 )
 
 func TestIssuedMandateService_Get(t *testing.T) {
