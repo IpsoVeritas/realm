@@ -9,7 +9,6 @@ import (
 	document "github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	keys "github.com/Brickchain/go-keys.v1"
-	pubsub "github.com/Brickchain/go-pubsub.v1"
 	realm "github.com/Brickchain/realm"
 	filestore "github.com/Brickchain/realm/pkg/providers/filestore"
 	"github.com/pkg/errors"
@@ -30,7 +29,6 @@ type RealmsServiceProvider struct {
 	filestore             filestore.Filestore
 	sks                   keys.StoredKeyService
 	kek                   []byte
-	pubsub                pubsub.PubSubInterface
 	realmTopic            string
 	bootstrapRealmID      string
 	bootstrapRealmContext *RealmService
@@ -52,7 +50,6 @@ func NewRealmsServiceProvider(
 	settings realm.SettingProvider,
 	sks keys.StoredKeyService,
 	kek []byte,
-	ps pubsub.PubSubInterface,
 	realmTopic string,
 	keyset *jose.JsonWebKeySet,
 	email realm.EmailProvider,
@@ -71,7 +68,6 @@ func NewRealmsServiceProvider(
 		settings:       settings,
 		sks:            sks,
 		kek:            kek,
-		pubsub:         ps,
 		realmTopic:     realmTopic,
 		keyset:         keyset,
 		email:          email,
@@ -192,7 +188,7 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		realmData.ID = fmt.Sprintf("%s.%s", crypto.Thumbprint(key), viper.GetString("proxy_domain"))
 	}
 
-	re, err := regexp.Compile("^[0-9|a-z|A-Z||\\-\\.\\:]*$")
+	re, err := regexp.Compile(`^[0-9|a-z|A-Z||\-\.\:]*$`)
 	if err != nil {
 		return nil, errors.Wrap(err, "could not build regex matcher")
 	}
@@ -245,10 +241,6 @@ func (p *RealmsServiceProvider) New(realmData *realm.Realm, key *jose.JsonWebKey
 		}
 	}
 
-	if err = p.publishEvent("ADDED", realmData.ID); err != nil {
-		return nil, errors.Wrap(err, "failed to publish event for created realm")
-	}
-
 	return realmData, nil
 }
 
@@ -297,20 +289,4 @@ func (p *RealmsServiceProvider) signPayload(realmID string, payload []byte) (*jo
 	}
 
 	return jws, nil
-}
-
-func (p *RealmsServiceProvider) publishEvent(eventType, realmID string) error {
-	event := &realm.RealmEvent{
-		Type:  eventType,
-		Realm: realmID,
-	}
-	eventBytes, err := json.Marshal(event)
-	if err != nil {
-		return err
-	}
-	if err = p.pubsub.Publish(p.realmTopic, string(eventBytes)); err != nil {
-		return err
-	}
-
-	return nil
 }

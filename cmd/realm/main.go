@@ -15,13 +15,10 @@ import (
 	"strings"
 	"time"
 
-	cache "github.com/Brickchain/go-cache.v1"
 	crypto "github.com/Brickchain/go-crypto.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	gormkeys "github.com/Brickchain/go-keys.v1/gorm"
 	logger "github.com/Brickchain/go-logger.v1"
-	proxy "github.com/Brickchain/go-proxy.v1/pkg/client"
-	pubsub "github.com/Brickchain/go-pubsub.v1"
 	realm "github.com/Brickchain/realm"
 	"github.com/Brickchain/realm/pkg/api/rest"
 	"github.com/Brickchain/realm/pkg/providers/assets"
@@ -53,7 +50,7 @@ func main() {
 	viper.SetDefault("log_level", "debug")
 	viper.SetDefault("prod", false)
 	viper.SetDefault("addr", ":6593")
-	viper.SetDefault("base", "")
+	viper.SetDefault("base", "http://localhost:6593")
 	viper.SetDefault("cryptoprovider", "gorm")
 	viper.SetDefault("gorm_dialect", "sqlite3")
 	viper.SetDefault("gorm_options", "file:./realm.db?cache=shared")
@@ -103,7 +100,6 @@ func main() {
 
 var w *io.PipeWriter
 var db *gorm.DB
-var cacheStore cache.Cache
 
 func loadEnv() {
 	home, err := homedir.Dir()
@@ -194,11 +190,6 @@ func loadHandler() http.Handler {
 		logger.Fatal(err)
 	}
 
-	pubsub, err := loadPubSub()
-	if err != nil {
-		logger.Fatal(err)
-	}
-
 	email, err := loadEmail()
 	if err != nil {
 		logger.Fatal(err)
@@ -218,7 +209,6 @@ func loadHandler() http.Handler {
 	}
 
 	var key *jose.JsonWebKey
-	var p *proxy.ProxyClient
 	if bootRealmID == "" || viper.GetString("base") == "" {
 		_, err := os.Stat(viper.GetString("key"))
 		if err != nil {
@@ -246,20 +236,6 @@ func loadHandler() http.Handler {
 				logger.Fatal(err)
 			}
 		}
-
-		p, err = proxy.NewProxyClient(viper.GetString("proxy_endpoint"))
-		if err != nil {
-			logger.Fatal(err)
-		} else {
-			hostname, err := p.Register(key)
-			if err != nil {
-				logger.Fatal(err)
-			}
-
-			logger.Infof("Got hostname: %s", hostname)
-
-			bootRealmID = hostname
-		}
 	}
 
 	base := viper.GetString("base")
@@ -279,7 +255,6 @@ func loadHandler() http.Handler {
 		roles,
 		settings,
 		sks, kek[0:32],
-		pubsub,
 		viper.GetString("realm_topic"),
 		keyset,
 		email,
@@ -289,21 +264,12 @@ func loadHandler() http.Handler {
 	var bootContext *services.RealmService
 
 	if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
-		if p == nil {
-			logger.Infof("Bootstrap realm does not exist, setting up realm %s", bootRealmID)
-			_, err = contextProvider.New(&realm.Realm{
-				ID: bootRealmID,
-			}, nil)
-			if err != nil {
-				logger.Fatal(err)
-			}
-		} else {
-			_, err := contextProvider.New(&realm.Realm{
-				ID: bootRealmID,
-			}, key)
-			if err != nil {
-				logger.Fatal(err)
-			}
+		logger.Infof("Bootstrap realm does not exist, setting up realm %s", bootRealmID)
+		_, err = contextProvider.New(&realm.Realm{
+			ID: bootRealmID,
+		}, nil)
+		if err != nil {
+			logger.Fatal(err)
 		}
 
 		if err := contextProvider.LoadBootstrapRealm(bootRealmID); err != nil {
@@ -463,10 +429,6 @@ func loadHandler() http.Handler {
 
 	handler := httphandler.LoadMiddlewares(r, version.Version)
 
-	if p != nil {
-		p.SetHandler(handler)
-	}
-
 	return handler
 }
 
@@ -492,17 +454,6 @@ func loadFilestore(base string, wrapper *httphandler.Wrapper, r *httprouter.Rout
 		r.GET("/realm/v2/files/*filename", wrapper.Wrap(f.Handler))
 
 		return f, nil
-	}
-}
-
-func loadPubSub() (pubsub.PubSubInterface, error) {
-	switch viper.GetString("pubsub") {
-	case "google":
-		return pubsub.NewGCloudPubSub(viper.GetString("pubsub_project_id"), viper.GetString("pubsub_credentials"))
-	case "redis":
-		return pubsub.NewRedisPubSub(viper.GetString("redis"))
-	default:
-		return pubsub.NewInmemPubSub(), nil
 	}
 }
 

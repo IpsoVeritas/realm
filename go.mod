@@ -6,18 +6,14 @@ replace github.com/Brickchain/go-document.v2 => /home/lars/code/github.com/Brick
 
 require (
 	cloud.google.com/go/storage v1.10.0
-	github.com/Brickchain/go-cache.v1 v0.0.0-20180810124009-837bf9bb1eef
 	github.com/Brickchain/go-crypto.v2 v0.0.0-20181010203950-c229a2b23e68
 	github.com/Brickchain/go-document.v2 v0.0.0-20180814075806-099bc71d4b53
 	github.com/Brickchain/go-httphandler.v2 v0.0.0-20180917092253-de7d59aef300
 	github.com/Brickchain/go-keys.v1 v0.0.0-20180614130935-e07793b924eb
 	github.com/Brickchain/go-logger.v1 v0.0.0-20180912100710-b76d97958f28
-	github.com/Brickchain/go-proxy.v1 v0.0.0-20181012141110-7f2b75496eac
-	github.com/Brickchain/go-pubsub.v1 v0.0.0-20180814132153-fdeae7e73e2d
 	github.com/Brickchain/go-stats.v1 v0.0.0-20180301214950-3ea002e0cdeb
 	github.com/DataDog/datadog-go v0.0.0-20170727083428-a420eee23bee // indirect
 	github.com/armon/go-metrics v0.0.0-20180221182744-783273d70314 // indirect
-	github.com/bradfitz/gomemcache v0.0.0-20170208213004-1952afaa557d // indirect
 	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
@@ -42,19 +38,14 @@ require (
 	github.com/onsi/gomega v1.13.0 // indirect
 	github.com/pascaldekloe/goe v0.1.0 // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/posener/wstest v0.0.0-20180217133618-28272a7ea048 // indirect
 	github.com/prometheus/procfs v0.0.0-20190522114515-bc1a522cf7b1 // indirect
 	github.com/satori/go.uuid v1.2.1-0.20180103174451-36e9d2ebbde5
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.4.0
 	github.com/subosito/twilio v0.0.2-0.20160901001414-ef2f13504366
 	github.com/tylerb/graceful v1.2.16-0.20170221171003-d72b0151351a
-	go4.org v0.0.0-20170314152642-169ea6cabe2a // indirect
 	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
 	google.golang.org/api v0.50.1-0.20210702115825-985b53fdf9cd
-	gopkg.in/go-redis/cache.v5 v5.0.4 // indirect
-	gopkg.in/redis.v5 v5.2.9 // indirect
 	gopkg.in/resty.v1 v1.12.0
 	gopkg.in/square/go-jose.v1 v1.1.2
-	gopkg.in/vmihailenco/msgpack.v2 v2.8.4 // indirect
 )

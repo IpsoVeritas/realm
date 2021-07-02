@@ -1,0 +1,8 @@
+.env
+cmd/realm/debug
+cmd/realm/realm
+*.db
+.files
+realm
+*.pem
+cmd/realm/*.yml

@@ -8,8 +8,8 @@ import (
 	"github.com/Brickchain/go-document.v2"
 	httphandler "github.com/Brickchain/go-httphandler.v2"
 	logger "github.com/Brickchain/go-logger.v1"
-	"github.com/pkg/errors"
 	realm "github.com/Brickchain/realm"
+	"github.com/pkg/errors"
 	jose "gopkg.in/square/go-jose.v1"
 )
 
@@ -46,11 +46,7 @@ func (r *RealmService) Set(realm *realm.Realm) error {
 		return err
 	}
 
-	if err := r.p.realms.Set(realm); err != nil {
-		return err
-	}
-
-	return r.p.publishEvent("UPDATED", r.realmID)
+	return r.p.realms.Set(realm)
 }
 
 func (r *RealmService) Delete() error {
@@ -82,11 +78,7 @@ func (r *RealmService) Delete() error {
 		}
 	}
 
-	if err := r.p.realms.Delete(r.realmID); err != nil {
-		return err
-	}
-
-	return r.p.publishEvent("DELETED", r.realmID)
+	return r.p.realms.Delete(r.realmID)
 }
 
 func (r *RealmService) Sign(payload []byte) (*jose.JsonWebSignature, error) {
