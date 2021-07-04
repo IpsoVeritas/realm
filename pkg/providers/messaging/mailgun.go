@@ -22,8 +22,7 @@ type MailgunTransport struct {
 func NewMailgunTransport(config *viper.Viper) (t *MailgunTransport) {
 	domain := config.GetString("mailgun_domain")
 	apiKey := config.GetString("mailgun_api_key")
-	publicAPIKey := config.GetString("mailgun_public_api_key")
-	mg := mailgun.NewMailgun(domain, apiKey, publicAPIKey)
+	mg := mailgun.NewMailgun(domain, apiKey)
 	t = &MailgunTransport{config.GetString("mailgun_from"), mg, config.GetBool("mailgun_testmode")}
 	return
 }
