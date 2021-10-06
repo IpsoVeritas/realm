@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: create-realm-key
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: create-realm-key
+rules:
+  - apiGroups: [""]
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - create      
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: create-realm-key
+subjects:
+  - kind: ServiceAccount
+    name: create-realm-key
+roleRef:
+  kind: Role
+  name: create-realm-key
+  apiGroup: rbac.authorization.k8s.io      
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-realm-key
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded, hook-failed
+spec:
+  template:
+    metadata:
+      name: create-realm-key
+    spec:
+      serviceAccountName: create-realm-key
+      containers:
+      - name: create-realm-key
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command:
+         - "/createKey.sh"
+        env:
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+      restartPolicy: Never 

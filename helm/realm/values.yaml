@@ -1,0 +1,32 @@
+
+image:
+  repository: docker.github.io/IpsoVeritas/realm
+  tag: latest
+  pullPolicy: IfNotPresent
+
+port: 6593
+base: https://lars.ngrok.io
+
+log:
+  level: debug
+  formatter: text
+
+service:
+  annotations: {}
+
+ingress:
+  enabled: false
+  hostname: "realm.local.lars.dev"
+
+  annotations: {}
+
+db:
+  host: realm-postgresql
+  user: postgres
+  password: test
+  name: realm
+
+postgresql:
+  enabled: true
+  postgresqlDatabase: realm
+  postgresqlPassword: "test"
