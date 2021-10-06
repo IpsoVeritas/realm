@@ -1,20 +1,26 @@
-module github.com/Brickchain/realm
+module github.com/IpsoVeritas/realm
 
-go 1.14
+go 1.16
 
-replace github.com/Brickchain/go-document.v2 => /home/lars/code/github.com/Brickchain/go-document.v2
+replace github.com/IpsoVeritas/document => ../document
+
+replace github.com/IpsoVeritas/httphandler => ../httphandler
+
+replace github.com/IpsoVeritas/crypto => ../crypto
+
+replace github.com/IpsoVeritas/logger => ../logger
+
+replace github.com/IpsoVeritas/keys => ../keys
 
 require (
 	cloud.google.com/go/storage v1.10.0
-	github.com/Brickchain/go-crypto.v2 v0.0.0-20181010203950-c229a2b23e68
-	github.com/Brickchain/go-document.v2 v0.0.0-20180814075806-099bc71d4b53
-	github.com/Brickchain/go-httphandler.v2 v0.0.0-20180917092253-de7d59aef300
-	github.com/Brickchain/go-keys.v1 v0.0.0-20180614130935-e07793b924eb
-	github.com/Brickchain/go-logger.v1 v0.0.0-20180912100710-b76d97958f28
-	github.com/Brickchain/go-stats.v1 v0.0.0-20180301214950-3ea002e0cdeb
 	github.com/DataDog/datadog-go v0.0.0-20170727083428-a420eee23bee // indirect
+	github.com/IpsoVeritas/crypto v0.0.0-20181010203950-c229a2b23e68
+	github.com/IpsoVeritas/document v0.0.0-20180814075806-099bc71d4b53
+	github.com/IpsoVeritas/httphandler v0.0.0-20180917092253-de7d59aef300
+	github.com/IpsoVeritas/keys v0.0.0-20180614130935-e07793b924eb
+	github.com/IpsoVeritas/logger v0.0.0-20180912100710-b76d97958f28
 	github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6 // indirect
-	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.10+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
@@ -26,7 +32,7 @@ require (
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/envy v1.9.0 // indirect
-	github.com/gorilla/handlers v1.3.0 // indirect
+	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
@@ -36,7 +42,7 @@ require (
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/jonboulle/clockwork v0.1.0 // indirect
-	github.com/julienschmidt/httprouter v1.2.0
+	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lib/pq v0.0.0-20170603225454-8837942c3e09 // indirect
 	github.com/mailgun/mailgun-go v2.0.0+incompatible
 	github.com/mattn/go-colorable v0.1.0
@@ -49,8 +55,8 @@ require (
 	github.com/prometheus/client_golang v0.9.3 // indirect
 	github.com/prometheus/procfs v0.0.0-20190522114515-bc1a522cf7b1 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
-	github.com/satori/go.uuid v1.2.1-0.20180103174451-36e9d2ebbde5
-	github.com/sirupsen/logrus v1.7.0
+	github.com/satori/go.uuid v1.2.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/soheilhy/cmux v0.1.4 // indirect
 	github.com/spf13/viper v1.8.1
 	github.com/subosito/twilio v0.0.2-0.20160901001414-ef2f13504366

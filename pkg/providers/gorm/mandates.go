@@ -3,10 +3,9 @@ package gorm
 import (
 	"encoding/json"
 
-	stats "github.com/Brickchain/go-stats.v1"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 // GormMandateService provider using a database
@@ -42,9 +41,6 @@ func (p *GormMandateService) Migrate() error {
 }
 
 func (p *GormMandateService) List(realmID string) ([]*realm.IssuedMandate, error) {
-	total := stats.StartTimer("services.mandate.List.total")
-	defer total.Stop()
-
 	mandates := make([]*mandateData, 0)
 	err := p.db.Where("realm = ?", realmID).Find(&mandates).Error
 	if err != nil {
@@ -64,9 +60,6 @@ func (p *GormMandateService) List(realmID string) ([]*realm.IssuedMandate, error
 }
 
 func (p *GormMandateService) ListForRole(realmID, role string) ([]*realm.IssuedMandate, error) {
-	total := stats.StartTimer("services.mandate.ListForRole.total")
-	defer total.Stop()
-
 	mandates := make([]*mandateData, 0)
 	err := p.db.Where("realm = ? AND role = ?", realmID, role).Find(&mandates).Error
 	if err != nil {
@@ -86,9 +79,6 @@ func (p *GormMandateService) ListForRole(realmID, role string) ([]*realm.IssuedM
 }
 
 func (p *GormMandateService) Get(realmID, id string) (*realm.IssuedMandate, error) {
-	total := stats.StartTimer("services.mandate.Get.total")
-	defer total.Stop()
-
 	ad := &mandateData{}
 	err := p.db.Where("id = ? AND realm = ?", id, realmID).First(&ad).Error
 	if err != nil {
@@ -103,11 +93,8 @@ func (p *GormMandateService) Get(realmID, id string) (*realm.IssuedMandate, erro
 }
 
 func (p *GormMandateService) Set(realmID string, c *realm.IssuedMandate) error {
-	total := stats.StartTimer("services.mandate.Set.total")
-	defer total.Stop()
-
 	if c.ID == "" {
-		c.ID = uuid.Must(uuid.NewV4()).String()
+		c.ID = uuid.NewV4().String()
 	}
 
 	bytes, err := json.Marshal(c)
@@ -128,8 +115,5 @@ func (p *GormMandateService) Set(realmID string, c *realm.IssuedMandate) error {
 }
 
 func (p *GormMandateService) Delete(realmID, id string) error {
-	total := stats.StartTimer("services.mandate.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&mandateData{}, "id = ? AND realm = ?", id, realmID).Error
 }

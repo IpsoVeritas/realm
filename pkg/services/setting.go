@@ -1,6 +1,6 @@
 package services
 
-import realm "github.com/Brickchain/realm"
+import realm "github.com/IpsoVeritas/realm"
 
 type SettingService struct {
 	p       realm.SettingProvider

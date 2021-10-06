@@ -3,10 +3,9 @@ package gorm
 import (
 	"encoding/json"
 
-	stats "github.com/Brickchain/go-stats.v1"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 // GormMandateTicketService provider using a database
@@ -41,9 +40,6 @@ func (p *GormMandateTicketService) Migrate() error {
 }
 
 func (p *GormMandateTicketService) List(realmID string) ([]*realm.MandateTicket, error) {
-	total := stats.StartTimer("services.mandateTicket.List.total")
-	defer total.Stop()
-
 	mandateTickets := make([]*mandateTicketData, 0)
 	err := p.db.Where("realm = ?", realmID).Find(&mandateTickets).Error
 	if err != nil {
@@ -63,9 +59,6 @@ func (p *GormMandateTicketService) List(realmID string) ([]*realm.MandateTicket,
 }
 
 func (p *GormMandateTicketService) Get(realmID, id string) (*realm.MandateTicket, error) {
-	total := stats.StartTimer("services.mandateTicket.Get.total")
-	defer total.Stop()
-
 	ad := &mandateTicketData{}
 	err := p.db.Where("id = ? AND realm = ?", id, realmID).First(&ad).Error
 	if err != nil {
@@ -80,11 +73,8 @@ func (p *GormMandateTicketService) Get(realmID, id string) (*realm.MandateTicket
 }
 
 func (p *GormMandateTicketService) Set(realmID string, c *realm.MandateTicket) error {
-	total := stats.StartTimer("services.mandateTicket.Set.total")
-	defer total.Stop()
-
 	if c.ID == "" {
-		c.ID = uuid.Must(uuid.NewV4()).String()
+		c.ID = uuid.NewV4().String()
 	}
 
 	bytes, err := json.Marshal(c)
@@ -104,8 +94,5 @@ func (p *GormMandateTicketService) Set(realmID string, c *realm.MandateTicket) e
 }
 
 func (p *GormMandateTicketService) Delete(realmID, id string) error {
-	total := stats.StartTimer("services.mandateTicket.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&mandateTicketData{}, "id = ? AND realm = ?", id, realmID).Error
 }

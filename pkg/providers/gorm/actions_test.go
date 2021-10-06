@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	realm "github.com/Brickchain/realm"
+	realm "github.com/IpsoVeritas/realm"
 )
 
 func TestActionService_Get(t *testing.T) {

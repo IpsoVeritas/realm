@@ -1,8 +1,8 @@
 package services
 
 import (
+	realm "github.com/IpsoVeritas/realm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 type MandateTicketService struct {
@@ -21,7 +21,7 @@ func (m *MandateTicketService) Get(id string) (*realm.MandateTicket, error) {
 
 func (m *MandateTicketService) Set(mandateTicket *realm.MandateTicket) error {
 	if mandateTicket.ID == "" {
-		mandateTicket.ID = uuid.Must(uuid.NewV4()).String()
+		mandateTicket.ID = uuid.NewV4().String()
 	}
 
 	mandateTicket.Realm = m.realmID

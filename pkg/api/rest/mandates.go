@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	document "github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	document "github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type MandatesController struct {
@@ -23,9 +22,6 @@ func NewMandatesController(contextProvider *services.RealmsServiceProvider) *Man
 }
 
 func (c *MandatesController) List(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.mandates.List.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -57,9 +53,6 @@ func (c *MandatesController) List(req httphandler.AuthenticatedRequest) httphand
 }
 
 func (c *MandatesController) Get(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.mandates.Get.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -85,9 +78,6 @@ func (c *MandatesController) Get(req httphandler.AuthenticatedRequest) httphandl
 }
 
 func (c *MandatesController) Revoke(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.mandates.Revoke.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -118,9 +108,6 @@ func (c *MandatesController) Revoke(req httphandler.AuthenticatedRequest) httpha
 }
 
 func (c *MandatesController) Issue(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.mandates.Issue.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))

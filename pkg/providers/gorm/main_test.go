@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/jinzhu/gorm"
-	realm "github.com/Brickchain/realm"
+	realm "github.com/IpsoVeritas/realm"
 )
 
 type service struct {

@@ -1,6 +1,6 @@
 package realm
 
-import "github.com/Brickchain/go-document.v2"
+import "github.com/IpsoVeritas/document"
 
 type Controller struct {
 	document.Base

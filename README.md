@@ -4,9 +4,9 @@
 
 Check out realm-ng from the git repository:
 
-    go get github.com/Brickchain/realm
+    go get github.com/IpsoVeritas/realm
 
-    cd $GOPATH/src/github.com/Brickchain/realm/cmd
+    cd $GOPATH/src/github.com/IpsoVeritas/realm/cmd
 
 Add a .env file with this content to that directory:
 

@@ -1,7 +1,7 @@
 package realm
 
 import (
-	"github.com/Brickchain/go-document.v2"
+	"github.com/IpsoVeritas/document"
 	jose "gopkg.in/square/go-jose.v1"
 )
 

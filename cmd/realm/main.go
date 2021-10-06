@@ -15,20 +15,20 @@ import (
 	"strings"
 	"time"
 
-	crypto "github.com/Brickchain/go-crypto.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	gormkeys "github.com/Brickchain/go-keys.v1/gorm"
-	logger "github.com/Brickchain/go-logger.v1"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/api/rest"
-	"github.com/Brickchain/realm/pkg/providers/assets"
-	"github.com/Brickchain/realm/pkg/providers/bindata"
-	"github.com/Brickchain/realm/pkg/providers/dummy"
-	filestore "github.com/Brickchain/realm/pkg/providers/filestore"
-	gormprvdr "github.com/Brickchain/realm/pkg/providers/gorm"
-	"github.com/Brickchain/realm/pkg/providers/mailgun"
-	"github.com/Brickchain/realm/pkg/services"
-	"github.com/Brickchain/realm/pkg/version"
+	crypto "github.com/IpsoVeritas/crypto"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	gormkeys "github.com/IpsoVeritas/keys/gorm"
+	logger "github.com/IpsoVeritas/logger"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/api/rest"
+	"github.com/IpsoVeritas/realm/pkg/providers/assets"
+	"github.com/IpsoVeritas/realm/pkg/providers/bindata"
+	"github.com/IpsoVeritas/realm/pkg/providers/dummy"
+	filestore "github.com/IpsoVeritas/realm/pkg/providers/filestore"
+	gormprvdr "github.com/IpsoVeritas/realm/pkg/providers/gorm"
+	"github.com/IpsoVeritas/realm/pkg/providers/mailgun"
+	"github.com/IpsoVeritas/realm/pkg/services"
+	"github.com/IpsoVeritas/realm/pkg/version"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -75,7 +75,7 @@ func main() {
 		logger.SetFormatter(viper.GetString("log_formatter"))
 	}
 	logger.SetLevel(viper.GetString("log_level"))
-	logger.AddContext("service", "realm-ng")
+	logger.AddContext("service", "realm")
 	logger.AddContext("version", version.Version)
 
 	w = logger.GetLogger().Logger.Writer()

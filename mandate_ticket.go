@@ -1,7 +1,7 @@
 package realm
 
 import (
-	"github.com/Brickchain/go-document.v2"
+	"github.com/IpsoVeritas/document"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -16,7 +16,7 @@ type MandateTicket struct {
 func NewMandateTicket() *MandateTicket {
 	return &MandateTicket{
 		Base: document.Base{
-			ID: uuid.Must(uuid.NewV4()).String(),
+			ID: uuid.NewV4().String(),
 		},
 		Facts: make(map[string]string),
 	}

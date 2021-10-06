@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	filestore "github.com/Brickchain/realm/pkg/providers/filestore"
+	filestore "github.com/IpsoVeritas/realm/pkg/providers/filestore"
 )
 
 type FileService struct {

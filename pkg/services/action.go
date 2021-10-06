@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/Brickchain/go-document.v2"
-	logger "github.com/Brickchain/go-logger.v1"
+	"github.com/IpsoVeritas/document"
+	logger "github.com/IpsoVeritas/logger"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	realm "github.com/Brickchain/realm"
+	realm "github.com/IpsoVeritas/realm"
 )
 
 type ActionService struct {

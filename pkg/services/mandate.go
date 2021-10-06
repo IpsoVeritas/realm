@@ -3,12 +3,12 @@ package services
 import (
 	"encoding/json"
 
-	"github.com/Brickchain/go-document.v2"
+	"github.com/IpsoVeritas/document"
 
-	crypto "github.com/Brickchain/go-crypto.v2"
+	crypto "github.com/IpsoVeritas/crypto"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 type MandateService struct {
@@ -27,7 +27,7 @@ func (m *MandateService) Get(id string) (*realm.IssuedMandate, error) {
 
 func (m *MandateService) Set(mandate *realm.IssuedMandate) error {
 	if mandate.ID == "" {
-		mandate.ID = uuid.Must(uuid.NewV4()).String()
+		mandate.ID = uuid.NewV4().String()
 	}
 
 	mandate.Realm = m.realmID
@@ -44,7 +44,7 @@ func (m *MandateService) ListForRole(role string) ([]*realm.IssuedMandate, error
 
 func (m *MandateService) Issue(mandate *document.Mandate, label string) (*realm.IssuedMandate, error) {
 	if mandate.ID == "" {
-		mandate.ID = uuid.Must(uuid.NewV4()).String()
+		mandate.ID = uuid.NewV4().String()
 	}
 	mandate.Realm = m.realmID
 

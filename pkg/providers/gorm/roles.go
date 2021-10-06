@@ -3,11 +3,10 @@ package gorm
 import (
 	"encoding/json"
 
-	document "github.com/Brickchain/go-document.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	document "github.com/IpsoVeritas/document"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 type roleData struct {
@@ -39,9 +38,6 @@ func (p *GormRoleService) Migrate() error {
 }
 
 func (p *GormRoleService) List(realmID string) ([]*document.Role, error) {
-	total := stats.StartTimer("services.role.List.total")
-	defer total.Stop()
-
 	rs := make([]roleData, 0)
 	err := p.db.Where("realm = ?", realmID).Find(&rs).Error
 	if err != nil {
@@ -62,9 +58,6 @@ func (p *GormRoleService) List(realmID string) ([]*document.Role, error) {
 }
 
 func (p *GormRoleService) ByName(realmID, name string) (*document.Role, error) {
-	total := stats.StartTimer("services.role.ByName.total")
-	defer total.Stop()
-
 	r := roleData{}
 	err := p.db.Where("realm = ? AND role = ?", realmID, name).First(&r).Error
 	if err != nil {
@@ -80,9 +73,6 @@ func (p *GormRoleService) ByName(realmID, name string) (*document.Role, error) {
 }
 
 func (p *GormRoleService) Get(realmID, id string) (*document.Role, error) {
-	total := stats.StartTimer("services.role.Get.total")
-	defer total.Stop()
-
 	r := roleData{}
 	err := p.db.Where("id = ? AND realm = ?", id, realmID).First(&r).Error
 	if err != nil {
@@ -98,11 +88,8 @@ func (p *GormRoleService) Get(realmID, id string) (*document.Role, error) {
 }
 
 func (p *GormRoleService) Set(realmID string, role *document.Role) error {
-	total := stats.StartTimer("services.role.Set.total")
-	defer total.Stop()
-
 	if role.ID == "" {
-		role.ID = uuid.Must(uuid.NewV4()).String()
+		role.ID = uuid.NewV4().String()
 	}
 
 	role.Realm = realmID
@@ -123,8 +110,5 @@ func (p *GormRoleService) Set(realmID string, role *document.Role) error {
 }
 
 func (p *GormRoleService) Delete(realmID, id string) error {
-	total := stats.StartTimer("services.role.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&roleData{}, "id = ? AND realm = ?", id, realmID).Error
 }

@@ -3,9 +3,8 @@ package gorm
 import (
 	"fmt"
 
-	stats "github.com/Brickchain/go-stats.v1"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
-	realm "github.com/Brickchain/realm"
 )
 
 // GormSettingService provider using a database
@@ -37,9 +36,6 @@ func (p *GormSettingService) Migrate() error {
 }
 
 func (p *GormSettingService) List(realmID string) ([]*realm.Setting, error) {
-	total := stats.StartTimer("services.setting.List.total")
-	defer total.Stop()
-
 	settings := make([]*setting, 0)
 	err := p.db.Where("realm = ?", realmID).Find(&settings).Error
 	if err != nil {
@@ -63,9 +59,6 @@ func (p *GormSettingService) key(realmID, key string) string {
 }
 
 func (p *GormSettingService) Get(realmID, key string) (string, error) {
-	total := stats.StartTimer("services.setting.Get.total")
-	defer total.Stop()
-
 	setting := &setting{}
 	err := p.db.Where("id = ? AND realm = ?", p.key(realmID, key), realmID).First(&setting).Error
 	if err != nil {
@@ -76,9 +69,6 @@ func (p *GormSettingService) Get(realmID, key string) (string, error) {
 }
 
 func (p *GormSettingService) Set(realmID, key, value string) error {
-	total := stats.StartTimer("services.setting.Set.total")
-	defer total.Stop()
-
 	s := &setting{
 		ID:    p.key(realmID, key),
 		Realm: realmID,
@@ -90,8 +80,5 @@ func (p *GormSettingService) Set(realmID, key, value string) error {
 }
 
 func (p *GormSettingService) Delete(realmID, key string) error {
-	total := stats.StartTimer("services.setting.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&setting{}, "id = ? AND realm = ?", p.key(realmID, key), realmID).Error
 }

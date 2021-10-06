@@ -1,10 +1,10 @@
 package rest
 
 import (
-	httphandler "github.com/Brickchain/go-httphandler.v2"
+	httphandler "github.com/IpsoVeritas/httphandler"
 	"github.com/pkg/errors"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/services"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/services"
 
 	"net/http"
 )

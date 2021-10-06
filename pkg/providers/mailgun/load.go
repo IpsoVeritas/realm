@@ -3,8 +3,8 @@ package mailgun
 import (
 	"errors"
 
-	realm "github.com/Brickchain/realm"
-	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
+	realm "github.com/IpsoVeritas/realm"
+	messaging "github.com/IpsoVeritas/realm/pkg/providers/messaging"
 	"github.com/spf13/viper"
 )
 

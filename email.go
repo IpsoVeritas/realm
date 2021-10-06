@@ -1,7 +1,7 @@
 package realm
 
 import (
-	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
+	messaging "github.com/IpsoVeritas/realm/pkg/providers/messaging"
 )
 
 type EmailStatus struct {

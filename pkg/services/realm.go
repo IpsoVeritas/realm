@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/Brickchain/go-crypto.v2"
-	"github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	logger "github.com/Brickchain/go-logger.v1"
-	realm "github.com/Brickchain/realm"
+	"github.com/IpsoVeritas/crypto"
+	"github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	logger "github.com/IpsoVeritas/logger"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/pkg/errors"
 	jose "gopkg.in/square/go-jose.v1"
 )

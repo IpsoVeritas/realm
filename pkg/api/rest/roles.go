@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	document "github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	document "github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type RolesController struct {
@@ -22,10 +21,6 @@ func NewRolesController(contextProvider *services.RealmsServiceProvider) *RolesC
 }
 
 func (c *RolesController) List(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("handlers.roles.List.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -46,10 +41,6 @@ func (c *RolesController) List(req httphandler.AuthenticatedRequest) httphandler
 }
 
 func (c *RolesController) Get(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("handlers.roles.Get.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -75,10 +66,6 @@ func (c *RolesController) Get(req httphandler.AuthenticatedRequest) httphandler.
 }
 
 func (c *RolesController) Set(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("handlers.roles.Set.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -112,9 +99,6 @@ func (c *RolesController) Set(req httphandler.AuthenticatedRequest) httphandler.
 }
 
 func (c *RolesController) Delete(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.roles.Delete.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))

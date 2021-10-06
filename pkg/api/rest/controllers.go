@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	"github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type ControllersController struct {
@@ -24,10 +23,6 @@ func NewControllersController(contextProvider *services.RealmsServiceProvider) *
 }
 
 func (c *ControllersController) ListControllers(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.controllers.ListControllers.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -49,10 +44,6 @@ func (c *ControllersController) ListControllers(req httphandler.AuthenticatedReq
 }
 
 func (c *ControllersController) GetController(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("handlers.controllers.GetController.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -78,9 +69,6 @@ func (c *ControllersController) GetController(req httphandler.AuthenticatedReque
 }
 
 func (c *ControllersController) Set(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.controllers.Set.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -119,9 +107,6 @@ func (c *ControllersController) Set(req httphandler.AuthenticatedRequest) httpha
 }
 
 func (c *ControllersController) Bind(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.controllers.Bind.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -152,9 +137,6 @@ func (c *ControllersController) Bind(req httphandler.AuthenticatedRequest) httph
 }
 
 func (c *ControllersController) Delete(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.controllers.Delete.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -179,9 +161,6 @@ func (c *ControllersController) Delete(req httphandler.AuthenticatedRequest) htt
 }
 
 func (c *ControllersController) UpdateActions(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("api.controllers.UpdateActions.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))

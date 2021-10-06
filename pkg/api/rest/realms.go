@@ -7,13 +7,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Brickchain/go-crypto.v2"
-	"github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	"github.com/IpsoVeritas/crypto"
+	"github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/services"
 	jose "gopkg.in/square/go-jose.v1"
 )
 
@@ -69,10 +68,6 @@ func (c *RealmsController) ListRealms(req httphandler.AuthenticatedRequest) http
 }
 
 func (c *RealmsController) GetRealm(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.v2.realms.GetRealm.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -93,10 +88,6 @@ func (c *RealmsController) GetRealm(req httphandler.AuthenticatedRequest) httpha
 }
 
 func (c *RealmsController) PostRealm(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.v2.realms.PostRealm.total")
-	defer total.Stop()
-
 	if !c.contextProvider.HasMandateForBootstrapRealm(req.Mandates()) {
 		return httphandler.NewErrorResponse(http.StatusForbidden, errors.New("No access to create realms"))
 	}
@@ -134,10 +125,6 @@ func (c *RealmsController) PostRealm(req httphandler.AuthenticatedRequest) httph
 }
 
 func (c *RealmsController) UpdateRealm(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.v2.realms.UpdateRealm.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))
@@ -169,10 +156,6 @@ func (c *RealmsController) UpdateRealm(req httphandler.AuthenticatedRequest) htt
 }
 
 func (c *RealmsController) DeleteRealm(req httphandler.AuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.realms.DeleteRealm.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))
@@ -195,10 +178,6 @@ func (c *RealmsController) DeleteRealm(req httphandler.AuthenticatedRequest) htt
 // // this method is publicly accessible.
 // //
 func (c *RealmsController) JoinRealm(req httphandler.Request) httphandler.Response {
-
-	total := stats.StartTimer("api.realms.JoinRealm.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))
@@ -225,10 +204,6 @@ func (c *RealmsController) JoinRealm(req httphandler.Request) httphandler.Respon
 }
 
 func (c *RealmsController) JoinRealmCallback(req httphandler.Request) httphandler.Response {
-
-	total := stats.StartTimer("api.realms.JoinRealmCallback.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))
@@ -484,10 +459,6 @@ func (c *RealmsController) BannerHandler(req httphandler.AuthenticatedRequest) h
 
 func (c *RealmsController) Bootstrap(req httphandler.Request) httphandler.Response {
 	req.Log().Debug("bootstrap!")
-
-	total := stats.StartTimer("api.access.Bootstrap.total")
-	defer total.Stop()
-
 	password, err := req.Body()
 	if err != nil {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.Wrap(err, "could not read password"))

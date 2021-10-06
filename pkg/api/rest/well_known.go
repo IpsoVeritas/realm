@@ -3,10 +3,9 @@ package rest
 import (
 	"net/http"
 
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type WellKnownHandler struct {
@@ -22,9 +21,6 @@ func NewWellKnownHandler(base string, contextProvider *services.RealmsServicePro
 }
 
 func (h *WellKnownHandler) WellKnown(req httphandler.Request) httphandler.Response {
-	total := stats.StartTimer("api.well_known.WellKnown.total")
-	defer total.Stop()
-
 	realmID := req.OriginalRequest().Host
 
 	req.Log().AddField("realm", realmID)
@@ -43,9 +39,6 @@ func (h *WellKnownHandler) WellKnown(req httphandler.Request) httphandler.Respon
 }
 
 func (h *WellKnownHandler) WellKnownForRealm(req httphandler.Request) httphandler.Response {
-	total := stats.StartTimer("api.well_known.WellKnownForRealm.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 
 	req.Log().AddField("realm", realmID)

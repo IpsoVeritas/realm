@@ -12,9 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	logger "github.com/Brickchain/go-logger.v1"
-	realm "github.com/Brickchain/realm"
-	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
+	logger "github.com/IpsoVeritas/logger"
+	realm "github.com/IpsoVeritas/realm"
+	messaging "github.com/IpsoVeritas/realm/pkg/providers/messaging"
 )
 
 type DummyEmailProvider struct{}

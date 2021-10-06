@@ -1,6 +1,6 @@
 package realm
 
-import document "github.com/Brickchain/go-document.v2"
+import document "github.com/IpsoVeritas/document"
 
 // type Role struct {
 // 	ID          string `json:"@id,omitempty" gorm:"primary_key"`

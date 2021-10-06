@@ -3,10 +3,9 @@ package gorm
 import (
 	"encoding/json"
 
-	stats "github.com/Brickchain/go-stats.v1"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 // GormActionService provider using a database
@@ -42,9 +41,6 @@ func (p *GormActionService) Migrate() error {
 }
 
 func (p *GormActionService) List(realmID string) ([]*realm.ControllerAction, error) {
-	total := stats.StartTimer("services.action.List.total")
-	defer total.Stop()
-
 	actions := make([]*actionData, 0)
 	err := p.db.Where("realm = ?", realmID).Find(&actions).Error
 	if err != nil {
@@ -64,9 +60,6 @@ func (p *GormActionService) List(realmID string) ([]*realm.ControllerAction, err
 }
 
 func (p *GormActionService) ListForController(realmID, controllerID string) ([]*realm.ControllerAction, error) {
-	total := stats.StartTimer("services.action.ListForController.total")
-	defer total.Stop()
-
 	actions := make([]*actionData, 0)
 	err := p.db.Where("realm = ? AND controller = ?", realmID, controllerID).Find(&actions).Error
 	if err != nil {
@@ -86,9 +79,6 @@ func (p *GormActionService) ListForController(realmID, controllerID string) ([]*
 }
 
 func (p *GormActionService) Get(realmID, id string) (*realm.ControllerAction, error) {
-	total := stats.StartTimer("services.action.Get.total")
-	defer total.Stop()
-
 	ad := &actionData{}
 	err := p.db.Where("id = ? AND realm = ?", id, realmID).First(&ad).Error
 	if err != nil {
@@ -103,11 +93,8 @@ func (p *GormActionService) Get(realmID, id string) (*realm.ControllerAction, er
 }
 
 func (p *GormActionService) Set(realmID string, c *realm.ControllerAction) error {
-	total := stats.StartTimer("services.action.Set.total")
-	defer total.Stop()
-
 	if c.ID == "" {
-		c.ID = uuid.Must(uuid.NewV4()).String()
+		c.ID = uuid.NewV4().String()
 	}
 
 	bytes, err := json.Marshal(c)
@@ -128,8 +115,5 @@ func (p *GormActionService) Set(realmID string, c *realm.ControllerAction) error
 }
 
 func (p *GormActionService) Delete(realmID, id string) error {
-	total := stats.StartTimer("services.action.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&actionData{}, "id = ? AND realm = ?", id, realmID).Error
 }

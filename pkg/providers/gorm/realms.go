@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 
-	stats "github.com/Brickchain/go-stats.v1"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 )
 
 // Realm provider using a database
@@ -41,9 +40,6 @@ func (p *GormRealmService) Migrate() error {
 }
 
 func (p *GormRealmService) List() ([]*realm.Realm, error) {
-	total := stats.StartTimer("services.realm.List.total")
-	defer total.Stop()
-
 	realms := make([]*realmData, 0)
 	err := p.db.Find(&realms).Error
 	if err != nil {
@@ -62,9 +58,6 @@ func (p *GormRealmService) List() ([]*realm.Realm, error) {
 }
 
 func (p *GormRealmService) Get(id string) (*realm.Realm, error) {
-	total := stats.StartTimer("services.realm.Get.total")
-	defer total.Stop()
-
 	r := &realmData{}
 	err := p.db.Where("id = ?", id).First(&r).Error
 	if err != nil {
@@ -78,11 +71,8 @@ func (p *GormRealmService) Get(id string) (*realm.Realm, error) {
 }
 
 func (p *GormRealmService) Set(r *realm.Realm) error {
-	total := stats.StartTimer("services.realm.Set.total")
-	defer total.Stop()
-
 	if r.ID == "" {
-		r.ID = uuid.Must(uuid.NewV4()).String()
+		r.ID = uuid.NewV4().String()
 	}
 
 	bytes, err := json.Marshal(r)
@@ -99,8 +89,5 @@ func (p *GormRealmService) Set(r *realm.Realm) error {
 }
 
 func (p *GormRealmService) Delete(id string) error {
-	total := stats.StartTimer("services.realm.Delete.total")
-	defer total.Stop()
-
 	return p.db.Delete(&realmData{}, "id = ?", id).Error
 }

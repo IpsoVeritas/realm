@@ -3,9 +3,9 @@ package gorm
 import (
 	"testing"
 
-	document "github.com/Brickchain/go-document.v2"
+	document "github.com/IpsoVeritas/document"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	realm "github.com/Brickchain/realm"
+	realm "github.com/IpsoVeritas/realm"
 )
 
 func TestRoleService_Get(t *testing.T) {

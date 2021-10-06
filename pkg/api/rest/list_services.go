@@ -3,11 +3,10 @@ package rest
 import (
 	"net/http"
 
-	"github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	"github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type ServicesController struct {
@@ -21,10 +20,6 @@ func NewServicesController(contextProvider *services.RealmsServiceProvider) *Ser
 }
 
 func (c *ServicesController) ListServices(req httphandler.OptionalAuthenticatedRequest) httphandler.Response {
-
-	total := stats.StartTimer("api.list_services.ListServices.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))

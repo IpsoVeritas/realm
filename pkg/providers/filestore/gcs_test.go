@@ -13,7 +13,7 @@ func TestNewGCS(t *testing.T) {
 		t.Skip("Could not find test_gcs_credentials.json")
 	}
 
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.NewV4().String()
 	g, err := NewGCS(id, "EU", "brickchain-ci", "test_gcs_credentials.json")
 	defer func() {
 		err = g.DeleteBucket()
@@ -31,7 +31,7 @@ func TestGCS_Write(t *testing.T) {
 		t.Skip("Could not find test_gcs_credentials.json")
 	}
 
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.NewV4().String()
 	g, err := NewGCS(id, "EU", "brickchain-ci", "test_gcs_credentials.json")
 	defer func() {
 		err = g.Delete("write_test.txt")
@@ -63,7 +63,7 @@ func TestGCS_WriteWithDir(t *testing.T) {
 		t.Skip("Could not find test_gcs_credentials.json")
 	}
 
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.NewV4().String()
 	g, err := NewGCS(id, "EU", "brickchain-ci", "test_gcs_credentials.json")
 	defer func() {
 		err = g.Delete("things/write_test.txt")
@@ -95,7 +95,7 @@ func TestGCS_Read(t *testing.T) {
 		t.Skip("Could not find test_gcs_credentials.json")
 	}
 
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.NewV4().String()
 	g, err := NewGCS(id, "EU", "brickchain-ci", "test_gcs_credentials.json")
 	defer func() {
 		err = g.Delete("read_test.txt")

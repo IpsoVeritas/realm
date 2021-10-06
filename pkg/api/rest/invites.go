@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Brickchain/go-crypto.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	"github.com/IpsoVeritas/crypto"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	realm "github.com/IpsoVeritas/realm"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	realm "github.com/Brickchain/realm"
-	"github.com/Brickchain/realm/pkg/services"
 )
 
 type InvitesController struct {
@@ -23,9 +22,6 @@ func NewInvitesController(contextProvider *services.RealmsServiceProvider) *Invi
 }
 
 func (c *InvitesController) List(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.List.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -57,9 +53,6 @@ func (c *InvitesController) List(req httphandler.AuthenticatedRequest) httphandl
 }
 
 func (c *InvitesController) Get(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.Get.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -85,9 +78,6 @@ func (c *InvitesController) Get(req httphandler.AuthenticatedRequest) httphandle
 }
 
 func (c *InvitesController) Set(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.New.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -126,9 +116,6 @@ func (c *InvitesController) Set(req httphandler.AuthenticatedRequest) httphandle
 }
 
 func (c *InvitesController) Delete(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.Delete.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -153,9 +140,6 @@ func (c *InvitesController) Delete(req httphandler.AuthenticatedRequest) httphan
 }
 
 func (c *InvitesController) Send(req httphandler.AuthenticatedRequest) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.Send.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -186,9 +170,6 @@ func (c *InvitesController) Send(req httphandler.AuthenticatedRequest) httphandl
 }
 
 func (c *InvitesController) Fetch(req httphandler.Request) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.Send.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))
@@ -210,9 +191,6 @@ func (c *InvitesController) Fetch(req httphandler.Request) httphandler.Response 
 }
 
 func (c *InvitesController) Callback(req httphandler.Request) httphandler.Response {
-	total := stats.StartTimer("handlers.invites.Send.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("Need to specify realm"))

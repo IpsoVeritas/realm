@@ -7,11 +7,11 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/Brickchain/go-crypto.v2"
-	"github.com/Brickchain/go-document.v2"
+	"github.com/IpsoVeritas/crypto"
+	"github.com/IpsoVeritas/document"
+	realm "github.com/IpsoVeritas/realm"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
-	realm "github.com/Brickchain/realm"
 	resty "gopkg.in/resty.v1"
 	jose "gopkg.in/square/go-jose.v1"
 )
@@ -225,7 +225,7 @@ func (c *ControllerService) UpdateActions(controllerID string, mp *document.Mult
 
 		if !updated {
 			if descriptor.ID == "" {
-				descriptor.ID = uuid.Must(uuid.NewV4()).String()
+				descriptor.ID = uuid.NewV4().String()
 			}
 			action := &realm.ControllerAction{
 				ActionDescriptor: *descriptor,

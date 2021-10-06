@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Brickchain/go-crypto.v2"
-	"github.com/Brickchain/go-document.v2"
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	stats "github.com/Brickchain/go-stats.v1"
+	"github.com/IpsoVeritas/crypto"
+	"github.com/IpsoVeritas/document"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	"github.com/IpsoVeritas/realm/pkg/services"
 	"github.com/pkg/errors"
-	"github.com/Brickchain/realm/pkg/services"
 	jose "gopkg.in/square/go-jose.v1"
 )
 
@@ -34,10 +33,6 @@ func NewMandateTicketController(
 }
 
 func (c *MandateTicketController) IssueMandate(req httphandler.Request) httphandler.Response {
-
-	total := stats.StartTimer("api.mandate_tickets.IssueMandate.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))
@@ -71,10 +66,6 @@ func (c *MandateTicketController) IssueMandate(req httphandler.Request) httphand
 }
 
 func (c *MandateTicketController) IssueMandateCallback(req httphandler.Request) httphandler.Response {
-
-	total := stats.StartTimer("api.mandate_tickets.IssueMandateCallback.total")
-	defer total.Stop()
-
 	realmID := req.Params().ByName("realmID")
 	if realmID == "" {
 		return httphandler.NewErrorResponse(http.StatusBadRequest, errors.New("No realm specified"))

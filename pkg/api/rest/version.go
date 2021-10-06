@@ -4,8 +4,8 @@ import (
 	"os"
 	"path"
 
-	httphandler "github.com/Brickchain/go-httphandler.v2"
-	"github.com/Brickchain/realm/pkg/version"
+	httphandler "github.com/IpsoVeritas/httphandler"
+	"github.com/IpsoVeritas/realm/pkg/version"
 
 	"net/http"
 )

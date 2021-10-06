@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	crypto "github.com/Brickchain/go-crypto.v2"
-	document "github.com/Brickchain/go-document.v2"
-	logger "github.com/Brickchain/go-logger.v1"
-	realm "github.com/Brickchain/realm"
-	messaging "github.com/Brickchain/realm/pkg/providers/messaging"
+	crypto "github.com/IpsoVeritas/crypto"
+	document "github.com/IpsoVeritas/document"
+	logger "github.com/IpsoVeritas/logger"
+	realm "github.com/IpsoVeritas/realm"
+	messaging "github.com/IpsoVeritas/realm/pkg/providers/messaging"
 	"github.com/pkg/errors"
 	jose "gopkg.in/square/go-jose.v1"
 )

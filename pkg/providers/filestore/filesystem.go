@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Brickchain/go-logger.v1"
+	"github.com/IpsoVeritas/logger"
 
 	"github.com/julienschmidt/httprouter"
 )

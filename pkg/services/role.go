@@ -1,8 +1,8 @@
 package services
 
 import (
-	document "github.com/Brickchain/go-document.v2"
-	realm "github.com/Brickchain/realm"
+	document "github.com/IpsoVeritas/document"
+	realm "github.com/IpsoVeritas/realm"
 )
 
 type RoleService struct {

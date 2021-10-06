@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	logger "github.com/Brickchain/go-logger.v1"
+	logger "github.com/IpsoVeritas/logger"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
