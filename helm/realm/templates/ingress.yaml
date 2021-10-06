@@ -1,25 +1,25 @@
-{{- if .Values.ingress.enabled }}
+{{- if .Values.realm.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ .Chart.Name }}
   annotations:
-    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+    {{- toYaml .Values.realm.ingress.annotations | nindent 4 }}
 spec:
   rules:
-  - host: "{{ .Values.ingress.hostname }}"
+  - host: "{{ .Values.realm.ingress.hostname }}"
     http:
       paths:
       - backend:
           serviceName: realm
-          servicePort: {{ .Values.port }}
+          servicePort: {{ .Values.realm.port }}
         path: /
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.realm.ingress.tls }}
   tls:
   - hosts:
-    - "{{ .Values.ingress.hostname }}"
-    {{- if .Values.ingress.tls.secretName }}
-    secretName: {{ .Values.ingress.tls.secretName }}
+    - "{{ .Values.realm.ingress.hostname }}"
+    {{- if .Values.realm.ingress.tls.secretName }}
+    secretName: {{ .Values.realm.ingress.tls.secretName }}
     {{- end }}
   {{- end }}
 {{- end }}

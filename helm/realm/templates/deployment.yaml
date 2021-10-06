@@ -33,38 +33,38 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.realm.image.repository }}:{{ .Values.realm.image.tag }}"
+          imagePullPolicy: {{ .Values.realm.image.pullPolicy }}
           command:
             - /realm
           env:
             - name: LOG_LEVEL
-              value: {{ .Values.log.level }}
+              value: {{ .Values.realm.log.level }}
             - name: LOG_FORMATTER
-              value: {{ .Values.log.formatter}}
+              value: {{ .Values.realm.log.formatter}}
             - name: ADDR
-              value: ":{{ .Values.port }}"
+              value: ":{{ .Values.realm.port }}"
             - name: "BASE"
-              value: "{{ .Values.base }}"
+              value: "{{ .Values.realm.base }}"
             - name: KEY
               value: "/secrets/key/realm.pem"
             - name: GORM_DIALECT
               value: "postgres"
             - name: "GORM_OPTIONS"
-              value: "host={{ .Values.db.host }} user={{ .Values.db.user }} password={{ .Values.db.password }} dbname={{ .Values.db.name }} sslmode=disable port=5432"
+              value: "host={{ .Values.realm.db.host }} user={{ .Values.realm.db.user }} password={{ .Values.realm.db.password }} dbname={{ .Values.realm.db.name }} sslmode=disable port=5432"
           ports:
             - name: api
-              containerPort: {{ .Values.port }}
+              containerPort: {{ .Values.realm.port }}
               protocol: TCP
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.port }}
+              port: {{ .Values.realm.port }}
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.realm.resources | nindent 12 }}
           volumeMounts:
             - name: realm-key
               mountPath: /secrets/key
@@ -72,15 +72,15 @@ spec:
         - name: realm-key
           secret:
             secretName: realm-key
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.realm.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.realm.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.realm.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

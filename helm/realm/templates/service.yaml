@@ -6,11 +6,11 @@ metadata:
     app: realm
     release: {{ .Release.Name }}
   annotations:
-    {{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- toYaml .Values.realm.service.annotations | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.realm.service.type }}
   ports:
-  - port: {{ .Values.port }}
+  - port: {{ .Values.realm.port }}
     name: api
   selector:
     app: realm

@@ -44,7 +44,7 @@ spec:
       serviceAccountName: create-realm-key
       containers:
       - name: create-realm-key
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.realm.image.repository }}:{{ .Values.realm.image.tag }}"
         command:
          - "/createKey.sh"
         env:
